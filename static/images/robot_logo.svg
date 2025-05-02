@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 로봇 머리 -->
+  <rect x="50" y="30" width="100" height="80" rx="10" fill="#4B7BEC" stroke="#2C3E50" stroke-width="4"/>
+  
+  <!-- 로봇 눈 -->
+  <circle cx="75" cy="60" r="10" fill="#FFFFFF" stroke="#2C3E50" stroke-width="2"/>
+  <circle cx="125" cy="60" r="10" fill="#FFFFFF" stroke="#2C3E50" stroke-width="2"/>
+  <circle cx="75" cy="60" r="5" fill="#3B82F6"/>
+  <circle cx="125" cy="60" r="5" fill="#3B82F6"/>
+  
+  <!-- 로봇 입 -->
+  <rect x="70" y="85" width="60" height="10" rx="5" fill="#2C3E50"/>
+  
+  <!-- 로봇 안테나 -->
+  <line x1="100" y1="30" x2="100" y2="15" stroke="#2C3E50" stroke-width="4"/>
+  <circle cx="100" cy="10" r="5" fill="#EB3B5A"/>
+  
+  <!-- 로봇 몸체 -->
+  <rect x="60" y="115" width="80" height="60" rx="5" fill="#4B7BEC" stroke="#2C3E50" stroke-width="4"/>
+  
+  <!-- 로봇 팔 -->
+  <rect x="30" y="120" width="25" height="10" rx="5" fill="#4B7BEC" stroke="#2C3E50" stroke-width="2"/>
+  <rect x="145" y="120" width="25" height="10" rx="5" fill="#4B7BEC" stroke="#2C3E50" stroke-width="2"/>
+  
+  <!-- 코딩 심볼 -->
+  <rect x="75" y="130" width="50" height="30" rx="5" fill="#FFFFFF" stroke="#2C3E50" stroke-width="2"/>
+  <text x="80" y="150" font-family="Consolas, monospace" font-size="12" fill="#2C3E50">&lt;/&gt;</text>
+  
+  <!-- 로봇 다리 -->
+  <rect x="70" y="175" width="15" height="20" rx="2" fill="#4B7BEC" stroke="#2C3E50" stroke-width="2"/>
+  <rect x="115" y="175" width="15" height="20" rx="2" fill="#4B7BEC" stroke="#2C3E50" stroke-width="2"/>
+</svg> 
