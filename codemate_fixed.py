@@ -211,14 +211,14 @@ def show_login():
 def show_main_app():
     # Sidebar
     with st.sidebar:
-        st.title("�� 코드메이트")
+        st.title("🤖 코드메이트")
         st.write(f"**안녕, {SAMPLE_USER['name']}!**")
         st.write(f"**나이:** {SAMPLE_USER['age']}세")
         st.write(f"**학년:** {SAMPLE_USER['grade']}학년")
         st.write("**관심사:**")
         for interest in SAMPLE_USER['interests']:
             st.write(f"- {interest}")
-        
+     
         st.divider()
         
         # Learning progress summary
