@@ -313,31 +313,24 @@ def show_main_app():
                 # Display chat history
                 for i, chat in enumerate(st.session_state.chat_history):
                     # Question
-                    with st.chat_message("user", avatar="👦"):
-                        st.write(chat['question'])
+                    st.markdown(f"""
+                    <div style='background-color: #f0f2f6; padding: 10px; border-radius: 10px; margin: 10px 0;'>
+                        <div style='display: flex; align-items: center;'>
+                            <span style='font-size: 24px; margin-right: 10px;'>👦</span>
+                            <div>{chat['question']}</div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
                     
                     # Answer
-                    with st.chat_message("assistant", avatar="🤖"):
-                        # Streamlit Cloud에서는 타이핑 효과를 빠르게 처리
-                        try:
-                            is_cloud = st.secrets.get("general", {}).get("is_streamlit_cloud", False)
-                        except:
-                            is_cloud = False
-                        
-                        if i == len(st.session_state.chat_history) - 1 and not is_cloud:
-                            # 로컬 환경에서는 타이핑 효과 적용
-                            message_placeholder = st.empty()
-                            full_answer = chat['answer']
-                            
-                            # Simulate typing (더 빠르게 설정)
-                            for k in range(len(full_answer) + 1):
-                                message_placeholder.markdown(full_answer[:k] + "▌")
-                                time.sleep(0.001)  # 타이핑 속도 상향 조정
-                            
-                            message_placeholder.markdown(full_answer)
-                        else:
-                            # Streamlit Cloud에서는 바로 표시
-                            st.markdown(chat['answer'])
+                    st.markdown(f"""
+                    <div style='background-color: #e6f3ff; padding: 10px; border-radius: 10px; margin: 10px 0;'>
+                        <div style='display: flex; align-items: center;'>
+                            <span style='font-size: 24px; margin-right: 10px;'>🤖</span>
+                            <div>{chat['answer']}</div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
         
         # Tab 2: Code practice
         with tabs[1]:
