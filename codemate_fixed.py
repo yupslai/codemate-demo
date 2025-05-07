@@ -166,7 +166,7 @@ def show_login():
         st.markdown('<div class="login-container">', unsafe_allow_html=True)
         
         # 로그인 헤더
-        st.markdown('<h1 class="login-header">�� CodeMate - AI 코딩 튜터</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="login-header">🤖 CodeMate - AI 코딩 튜터</h1>', unsafe_allow_html=True)
         
         # 두 개 컬럼으로 나누기
         col1, col2 = st.columns([1, 1])
@@ -174,7 +174,7 @@ def show_login():
         with col1:
             st.markdown('<div class="logo-container">', unsafe_allow_html=True)
             # 로고와 슬로건
-            st.markdown('<h1 style="font-size: 80px; text-align: center;">👦</h1>', unsafe_allow_html=True)
+            st.markdown('<h1 style="font-size: 80px; text-align: center;">🤖</h1>', unsafe_allow_html=True)
             st.markdown('<h3 class="centered-text">개인 맞춤형 학습 경험</h3>', unsafe_allow_html=True)
             st.markdown('<p class="centered-text">학생의 관심사와 학습 스타일에 맞춘<br>지능형 코딩 교육</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
@@ -211,7 +211,7 @@ def show_login():
 def show_main_app():
     # Sidebar
     with st.sidebar:
-        st.title("�� 코드메이트")
+        st.title("🤖 CodeMate")
         st.write(f"**안녕, {SAMPLE_USER['name']}!**")
         st.write(f"**나이:** {SAMPLE_USER['age']}세")
         st.write(f"**학년:** {SAMPLE_USER['grade']}학년")
@@ -243,7 +243,7 @@ def show_main_app():
         st.divider()
         
         # 선생님 연결하기 버튼
-        if st.button("👨‍🏫 선생님과 연결하기", help="코딩 문제로 어려움을 겪고 계신가요? 선생님과 연결해보세요!"):
+        if st.button("👨‍�� 선생님과 연결하기", help="코딩 문제로 어려움을 겪고 계신가요? 선생님과 연결해보세요!"):
             st.session_state.show_teacher_connection = True
             st.experimental_rerun()
         
@@ -252,7 +252,7 @@ def show_main_app():
             st.experimental_rerun()
     
     # Main content
-    st.title("코드메이트와 함께 코딩을 배워보세요! ��‍💻")
+    st.title("CodeMate와 함께 코딩을 배워보세요! 👨‍💻")
     
     # 선생님 연결하기 버튼이 클릭되었는지 확인
     if st.session_state.get('show_teacher_connection', False):
@@ -318,7 +318,7 @@ def show_main_app():
                     st.markdown(f"""
                     <div style='background-color: #f0f2f6; padding: 10px; border-radius: 10px; margin: 10px 0;'>
                         <div style='display: flex; align-items: center;'>
-                            <span style='font-size: 24px; margin-right: 10px;'>👦</span>
+                            <span style='font-size: 24px; margin-right: 10px;'>🤖</span>
                             <div>{chat['question']}</div>
                         </div>
                     </div>
@@ -581,4 +581,4 @@ else:
 
 # Footer
 st.divider()
-st.caption("© 2025 코드메이트 - 개인화된 AI 코딩 튜터")
+st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터")
