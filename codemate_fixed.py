@@ -250,115 +250,121 @@ def show_main_app():
             st.experimental_rerun()
     
     # Main content
-    st.title("코드메이트와 함께 코딩을 배워보세요! 👨‍💻")
+    st.title("코드메이트와 함께 코딩을 배워보세요! ��‍💻")
     
-    tabs = st.tabs(["질문하기", "코드 연습", "학습 분석", "선생님 연결하기"])
-    
-    # Tab 1: Ask questions
-    with tabs[0]:
-        st.header("무엇이든 물어보세요!")
+    # 선생님 연결하기 버튼이 클릭되었는지 확인
+    if st.session_state.get('show_teacher_connection', False):
+        show_teacher_connection()
+        # 상태 초기화
+        st.session_state.show_teacher_connection = False
+    else:
+        tabs = st.tabs(["질문하기", "코드 연습", "학습 분석", "선생님 연결하기"])
         
-        # Demo questions
-        st.subheader("질문 예시")
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            if st.button("while 반복문이 뭐야?"):
-                st.session_state.current_question = "while_loop"
-        
-        with col2:
-            if st.button("이 코드 오류 찾아줘"):
-                st.session_state.current_question = "debugging"
-        
-        with col3:
-            if st.button("함수가 뭐에요?"):
-                st.session_state.current_question = "function"
-        
-        # Custom question
-        custom_question = st.text_area("또는 직접 질문하기:", placeholder="여기에 질문을 입력하세요...")
-        if st.button("질문하기") and custom_question:
-            # For demo, redirect to one of our sample questions based on keywords
-            if "while" in custom_question or "반복" in custom_question:
-                st.session_state.current_question = "while_loop"
-            elif "오류" in custom_question or "에러" in custom_question or "디버깅" in custom_question:
-                st.session_state.current_question = "debugging"
-            elif "함수" in custom_question:
-                st.session_state.current_question = "function"
-            else:
-                # Default to function explanation for any other question
-                st.session_state.current_question = "function"
-        
-        # Display answer
-        if st.session_state.current_question:
-            question_key = st.session_state.current_question
-            question = SAMPLE_QA[question_key]["question"]
-            answer = SAMPLE_QA[question_key]["answer"]
+        # Tab 1: Ask questions
+        with tabs[0]:
+            st.header("무엇이든 물어보세요!")
             
-            st.divider()
+            # Demo questions
+            st.subheader("질문 예시")
+            col1, col2, col3 = st.columns(3)
             
-            # Add to chat history if not already there
-            if not st.session_state.chat_history or st.session_state.chat_history[-1]['question'] != question:
-                st.session_state.chat_history.append({
-                    'question': question, 
-                    'answer': answer,
-                    'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                })
+            with col1:
+                if st.button("while 반복문이 뭐야?"):
+                    st.session_state.current_question = "while_loop"
             
-            # Display chat history
-            for i, chat in enumerate(st.session_state.chat_history):
-                # Question
-                with st.chat_message("user", avatar="👦"):
-                    st.write(chat['question'])
+            with col2:
+                if st.button("이 코드 오류 찾아줘"):
+                    st.session_state.current_question = "debugging"
+            
+            with col3:
+                if st.button("함수가 뭐에요?"):
+                    st.session_state.current_question = "function"
+            
+            # Custom question
+            custom_question = st.text_area("또는 직접 질문하기:", placeholder="여기에 질문을 입력하세요...")
+            if st.button("질문하기") and custom_question:
+                # For demo, redirect to one of our sample questions based on keywords
+                if "while" in custom_question or "반복" in custom_question:
+                    st.session_state.current_question = "while_loop"
+                elif "오류" in custom_question or "에러" in custom_question or "디버깅" in custom_question:
+                    st.session_state.current_question = "debugging"
+                elif "함수" in custom_question:
+                    st.session_state.current_question = "function"
+                else:
+                    # Default to function explanation for any other question
+                    st.session_state.current_question = "function"
+            
+            # Display answer
+            if st.session_state.current_question:
+                question_key = st.session_state.current_question
+                question = SAMPLE_QA[question_key]["question"]
+                answer = SAMPLE_QA[question_key]["answer"]
                 
-                # Answer
-                with st.chat_message("assistant", avatar="🤖"):
-                    # Streamlit Cloud에서는 타이핑 효과를 빠르게 처리
-                    try:
-                        is_cloud = st.secrets.get("general", {}).get("is_streamlit_cloud", False)
-                    except:
-                        is_cloud = False
+                st.divider()
+                
+                # Add to chat history if not already there
+                if not st.session_state.chat_history or st.session_state.chat_history[-1]['question'] != question:
+                    st.session_state.chat_history.append({
+                        'question': question, 
+                        'answer': answer,
+                        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    })
+                
+                # Display chat history
+                for i, chat in enumerate(st.session_state.chat_history):
+                    # Question
+                    with st.chat_message("user", avatar="👦"):
+                        st.write(chat['question'])
                     
-                    if i == len(st.session_state.chat_history) - 1 and not is_cloud:
-                        # 로컬 환경에서는 타이핑 효과 적용
-                        message_placeholder = st.empty()
-                        full_answer = chat['answer']
+                    # Answer
+                    with st.chat_message("assistant", avatar="🤖"):
+                        # Streamlit Cloud에서는 타이핑 효과를 빠르게 처리
+                        try:
+                            is_cloud = st.secrets.get("general", {}).get("is_streamlit_cloud", False)
+                        except:
+                            is_cloud = False
                         
-                        # Simulate typing (더 빠르게 설정)
-                        for k in range(len(full_answer) + 1):
-                            message_placeholder.markdown(full_answer[:k] + "▌")
-                            time.sleep(0.001)  # 타이핑 속도 상향 조정
-                        
-                        message_placeholder.markdown(full_answer)
-                    else:
-                        # Streamlit Cloud에서는 바로 표시
-                        st.markdown(chat['answer'])
-    
-    # Tab 2: Code practice
-    with tabs[1]:
-        st.header("코드 연습")
+                        if i == len(st.session_state.chat_history) - 1 and not is_cloud:
+                            # 로컬 환경에서는 타이핑 효과 적용
+                            message_placeholder = st.empty()
+                            full_answer = chat['answer']
+                            
+                            # Simulate typing (더 빠르게 설정)
+                            for k in range(len(full_answer) + 1):
+                                message_placeholder.markdown(full_answer[:k] + "▌")
+                                time.sleep(0.001)  # 타이핑 속도 상향 조정
+                            
+                            message_placeholder.markdown(full_answer)
+                        else:
+                            # Streamlit Cloud에서는 바로 표시
+                            st.markdown(chat['answer'])
         
-        # Sample practice problem based on user's weak concept (functions)
-        st.subheader("추천 연습 문제")
-        st.info("함수에 대한 이해도를 높이기 위한 연습 문제입니다.")
-        
-        st.markdown("""
-        ### 마인크래프트 블록 놓기 함수 만들기
-        
-        마인크래프트에서 여러 종류의 블록을 놓는 함수를 만들어보세요:
-        
-        ```python
-        def place_blocks(block_type, count):
-            # 이 함수는 주어진 유형의 블록을 count만큼 놓아야 합니다
-            # 아래 코드를 완성하세요
-            pass
-        ```
-        
-        1. 함수가 블록 타입과 개수를 받도록 하세요
-        2. 블록을 놓을 때마다 메시지를 출력하세요
-        3. 모든 블록을 놓은 후 완료 메시지를 출력하세요
-        """)
-        
-        user_code = st.text_area("코드를 여기에 작성하세요:", height=250, value="""def place_blocks(block_type, count):
+        # Tab 2: Code practice
+        with tabs[1]:
+            st.header("코드 연습")
+            
+            # Sample practice problem based on user's weak concept (functions)
+            st.subheader("추천 연습 문제")
+            st.info("함수에 대한 이해도를 높이기 위한 연습 문제입니다.")
+            
+            st.markdown("""
+            ### 마인크래프트 블록 놓기 함수 만들기
+            
+            마인크래프트에서 여러 종류의 블록을 놓는 함수를 만들어보세요:
+            
+            ```python
+            def place_blocks(block_type, count):
+                # 이 함수는 주어진 유형의 블록을 count만큼 놓아야 합니다
+                # 아래 코드를 완성하세요
+                pass
+            ```
+            
+            1. 함수가 블록 타입과 개수를 받도록 하세요
+            2. 블록을 놓을 때마다 메시지를 출력하세요
+            3. 모든 블록을 놓은 후 완료 메시지를 출력하세요
+            """)
+            
+            user_code = st.text_area("코드를 여기에 작성하세요:", height=250, value="""def place_blocks(block_type, count):
     # 여기에 코드를 작성하세요
     for i in range(count):
         print(f"{block_type} 블록을 놓았습니다.")
@@ -368,99 +374,99 @@ def show_main_app():
 # 함수 테스트
 place_blocks("돌", 5)
 """)
-        
-        if st.button("실행하기"):
-            st.subheader("실행 결과:")
             
-            # Simulate code execution
-            output = st.code("""돌 블록을 놓았습니다.
+            if st.button("실행하기"):
+                st.subheader("실행 결과:")
+                
+                # Simulate code execution
+                output = st.code("""돌 블록을 놓았습니다.
 돌 블록을 놓았습니다.
 돌 블록을 놓았습니다.
 돌 블록을 놓았습니다.
 돌 블록을 놓았습니다.
 총 5개의 돌 블록을 놓았습니다. 완료!""", language="plaintext")
+                
+                # Show feedback
+                st.success("잘했어요! 함수를 올바르게 만들었습니다. 이제 다른 블록 타입과 개수로도 시도해보세요.")
+                
+                # Update learning progress
+                for concept in LEARNING_HISTORY['concepts']:
+                    if concept['id'] == 'fun001':  # Function concept ID
+                        concept['understanding_level'] = min(5, concept['understanding_level'] + 1)
+                        concept['last_practiced'] = datetime.now().strftime("%Y-%m-%d")
+        
+        # Tab 3: Learning analysis
+        with tabs[2]:
+            st.header("학습 분석")
             
-            # Show feedback
-            st.success("잘했어요! 함수를 올바르게 만들었습니다. 이제 다른 블록 타입과 개수로도 시도해보세요.")
+            # Learning timeline - 날짜를 2025년으로 업데이트
+            st.subheader("학습 타임라인")
+            timeline_data = [
+                {"date": "2025-05-15", "concept": "변수", "activity": "퀴즈 완료", "score": "90%"},
+                {"date": "2025-05-18", "concept": "조건문", "activity": "실습 완료", "score": "75%"},
+                {"date": "2025-05-20", "concept": "반복문", "activity": "과제 제출", "score": "60%"},
+                {"date": "2025-05-22", "concept": "함수", "activity": "튜토리얼 완료", "score": "40%"}
+            ]
             
-            # Update learning progress
-            for concept in LEARNING_HISTORY['concepts']:
-                if concept['id'] == 'fun001':  # Function concept ID
-                    concept['understanding_level'] = min(5, concept['understanding_level'] + 1)
-                    concept['last_practiced'] = datetime.now().strftime("%Y-%m-%d")
-    
-    # Tab 3: Learning analysis
-    with tabs[2]:
-        st.header("학습 분석")
-        
-        # Learning timeline - 날짜를 2025년으로 업데이트
-        st.subheader("학습 타임라인")
-        timeline_data = [
-            {"date": "2025-05-15", "concept": "변수", "activity": "퀴즈 완료", "score": "90%"},
-            {"date": "2025-05-18", "concept": "조건문", "activity": "실습 완료", "score": "75%"},
-            {"date": "2025-05-20", "concept": "반복문", "activity": "과제 제출", "score": "60%"},
-            {"date": "2025-05-22", "concept": "함수", "activity": "튜토리얼 완료", "score": "40%"}
-        ]
-        
-        st.table(timeline_data)
-        
-        # Learning recommendations
-        st.subheader("추천 학습 경로")
-        st.info("현재 학습 데이터를 기반으로 한 맞춤형 추천입니다.")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("""
-            ### 단기 목표
-            1. **함수** 이해도 향상 (현재 1/5)
-                - 함수 기초 연습 문제 5개 풀기
-                - 함수를 사용한 간단한 게임 만들기
+            st.table(timeline_data)
             
-            2. **반복문** 이해도 향상 (현재 2/5)
-                - while과 for 반복문 차이점 학습
-                - 중첩 반복문 연습하기
-            """)
-        
-        with col2:
-            st.markdown("""
-            ### 장기 목표
-            1. **마인크래프트 모드 만들기**
-                - 필요 개념: 변수, 조건문, 반복문, 함수
-                - 예상 완료 시간: 3주
+            # Learning recommendations
+            st.subheader("추천 학습 경로")
+            st.info("현재 학습 데이터를 기반으로 한 맞춤형 추천입니다.")
             
-            2. **간단한 웹 게임 개발**
-                - HTML, CSS, JavaScript 기초 학습
-                - 예상 완료 시간: 2개월
-            """)
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("""
+                ### 단기 목표
+                1. **함수** 이해도 향상 (현재 1/5)
+                    - 함수 기초 연습 문제 5개 풀기
+                    - 함수를 사용한 간단한 게임 만들기
+                
+                2. **반복문** 이해도 향상 (현재 2/5)
+                    - while과 for 반복문 차이점 학습
+                    - 중첩 반복문 연습하기
+                """)
+            
+            with col2:
+                st.markdown("""
+                ### 장기 목표
+                1. **마인크래프트 모드 만들기**
+                    - 필요 개념: 변수, 조건문, 반복문, 함수
+                    - 예상 완료 시간: 3주
+                
+                2. **간단한 웹 게임 개발**
+                    - HTML, CSS, JavaScript 기초 학습
+                    - 예상 완료 시간: 2개월
+                """)
+            
+            # Achievements
+            st.subheader("획득한 업적")
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.markdown("### 🏆")
+                st.markdown("**첫 코드 작성**")
+                st.caption("2025-05-10 획득")
+            
+            with col2:
+                st.markdown("### 🌟")
+                st.markdown("**변수 마스터**")
+                st.caption("2025-05-15 획득")
+            
+            with col3:
+                st.markdown("### 🔄")
+                st.markdown("**반복문 탐험가**")
+                st.caption("2025-05-20 획득")
+            
+            with col4:
+                st.markdown("### ❓")
+                st.markdown("**조건부 논리**")
+                st.caption("2025-05-18 획득")
         
-        # Achievements
-        st.subheader("획득한 업적")
-        col1, col2, col3, col4 = st.columns(4)
-        
-        with col1:
-            st.markdown("### 🏆")
-            st.markdown("**첫 코드 작성**")
-            st.caption("2025-05-10 획득")
-        
-        with col2:
-            st.markdown("### 🌟")
-            st.markdown("**변수 마스터**")
-            st.caption("2025-05-15 획득")
-        
-        with col3:
-            st.markdown("### 🔄")
-            st.markdown("**반복문 탐험가**")
-            st.caption("2025-05-20 획득")
-        
-        with col4:
-            st.markdown("### ❓")
-            st.markdown("**조건부 논리**")
-            st.caption("2025-05-18 획득")
-    
-    # Tab 4: Teacher connection
-    with tabs[3]:
-        show_teacher_connection()
+        # Tab 4: Teacher connection
+        with tabs[3]:
+            show_teacher_connection()
 
 def show_teacher_connection():
     st.title("👨‍🏫 선생님과 연결하기")
@@ -507,6 +513,9 @@ def show_teacher_connection():
     # FAQ 섹션
     st.markdown("""
     ### 자주 묻는 질문
+    
+    **Q: 선생님은 어떤 분들인가요?**  
+    A: 하버드, 콜롬비아, UC버클리, 스탠포드 Computer Science 전공자들입니다.
     
     **Q: 선생님 연결은 유료인가요?**  
     A: 네, 선생님 연결 서비스는 유료입니다. 구체적인 가격은 선생님과 상담 후 결정됩니다.
