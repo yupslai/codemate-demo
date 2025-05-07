@@ -1,12 +1,9 @@
+import os
 import streamlit as st
 import json
 import random
 import time
-import numpy as np
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # 로고 URL 설정 (로컬 파일 대신 URL 사용)
 LOGO_URL = "https://raw.githubusercontent.com/openai/openai-python/main/assets/logo.png"
@@ -14,7 +11,7 @@ LOGO_URL = "https://raw.githubusercontent.com/openai/openai-python/main/assets/l
 # Simulated user data
 SAMPLE_USER = {
     "id": "user123",
-    "name": "민호",
+    "name": "Minho",
     "age": 11,
     "grade": 5,
     "interests": ["게임", "마인크래프트", "로봇"],
@@ -109,76 +106,6 @@ build_house(30, 0, 25, "큰")
 3. 나중에 수정할 때도 한 곳만 바꾸면 돼
 
 함수에 대해 더 궁금한 점이 있니?
-        """
-    },
-    
-    "list": {
-        "question": "파이썬에서 리스트란 무엇이고 어떻게 사용하나요?",
-        "answer": """
-안녕 민호! 파이썬의 리스트는 여러 개의 값을 순서대로 저장할 수 있는 자료구조야.
-
-마인크래프트로 예를 들면, 인벤토리에 여러 아이템을 저장하는 것과 비슷해!
-
-```python
-# 마인크래프트 인벤토리 아이템 예시
-inventory = ["검", "곡괭이", "횃불", "물양동이", "빵 5개"]
-
-# 첫 번째 아이템 사용하기
-print(f"첫 번째 슬롯에 있는 {inventory[0]}을 사용했어요!")
-
-# 새 아이템 추가하기
-inventory.append("다이아몬드")
-print(f"인벤토리에 다이아몬드를 추가했어요: {inventory}")
-
-# 아이템 제거하기
-used_item = inventory.pop(2)
-print(f"{used_item}을 사용했어요. 남은 인벤토리: {inventory}")
-```
-
-리스트는 대괄호 `[]`로 만들고, 각 항목은 쉼표로 구분해.
-리스트의 위치는 0부터 시작해서 첫 번째 항목이 `[0]`, 두 번째 항목이 `[1]`이야.
-
-리스트로 할 수 있는 멋진 것들:
-1. `.append()`: 새 항목 추가하기
-2. `.pop()`: 항목 제거하고 그 값 가져오기
-3. `.sort()`: 항목 정렬하기
-4. `len(리스트)`: 리스트 길이(항목 개수) 알아내기
-
-너만의 게임 인벤토리를 만들어볼래?
-        """
-    },
-    
-    "if_statement": {
-        "question": "if문이 뭐예요? 어떻게 사용하나요?",
-        "answer": """
-안녕 민호! if문은 특정 조건이 참(True)일 때만 코드를 실행하는 방법이야.
-
-마인크래프트로 예를 들어볼게:
-
-```python
-# 플레이어의 체력 확인하기
-player_health = 7
-
-if player_health < 5:
-    print("체력이 낮아요! 음식을 먹어야 해요!")
-elif player_health < 10:
-    print("체력이 적당해요. 모험을 계속해도 좋아요.")
-else:
-    print("체력이 충분해요! 던전에 도전해보세요!")
-```
-
-이 코드는 플레이어의 체력에 따라 다른 메시지를 보여줘:
-- 체력이 5 미만이면 첫 번째 메시지
-- 체력이 5 이상 10 미만이면 두 번째 메시지
-- 체력이 10 이상이면 세 번째 메시지
-
-if문의 기본 구조는 다음과 같아:
-
-
-`elif`와 `else` 부분은 필요 없으면 생략해도 돼.
-중요한 건 콜론(`:`)과 들여쓰기를 꼭 지켜야 한다는 거야!
-
-다른 예제를 보여줄까?
         """
     }
 }
@@ -311,6 +238,13 @@ def show_main_app():
             empty = "⬜" * (5 - level)
             st.write(level_text + filled + empty)
         
+        st.divider()
+        
+        # 선생님 연결하기 버튼
+        if st.button("👨‍🏫 선생님과 연결하기", help="코딩 문제로 어려움을 겪고 계신가요? 선생님과 연결해보세요!"):
+            st.session_state.show_teacher_connection = True
+            st.experimental_rerun()
+        
         if st.button("로그아웃"):
             st.session_state.logged_in = False
             st.experimental_rerun()
@@ -318,7 +252,7 @@ def show_main_app():
     # Main content
     st.title("코드메이트와 함께 코딩을 배워보세요! 👨‍💻")
     
-    tabs = st.tabs(["질문하기", "코드 연습", "학습 분석"])
+    tabs = st.tabs(["질문하기", "코드 연습", "학습 분석", "선생님 연결하기"])
     
     # Tab 1: Ask questions
     with tabs[0]:
@@ -326,7 +260,7 @@ def show_main_app():
         
         # Demo questions
         st.subheader("질문 예시")
-        col1, col2, col3, col4, col5 = st.columns(5)  # 5개 컬럼으로 변경
+        col1, col2, col3 = st.columns(3)
         
         with col1:
             if st.button("while 반복문이 뭐야?"):
@@ -339,15 +273,6 @@ def show_main_app():
         with col3:
             if st.button("함수가 뭐에요?"):
                 st.session_state.current_question = "function"
-                
-        # 새로운 버튼 추가
-        with col4:
-            if st.button("리스트란 뭐예요?"):
-                st.session_state.current_question = "list"
-                
-        with col5:
-            if st.button("if문 사용법"):
-                st.session_state.current_question = "if_statement"
         
         # Custom question
         custom_question = st.text_area("또는 직접 질문하기:", placeholder="여기에 질문을 입력하세요...")
@@ -359,10 +284,6 @@ def show_main_app():
                 st.session_state.current_question = "debugging"
             elif "함수" in custom_question:
                 st.session_state.current_question = "function"
-            elif "리스트" in custom_question or "배열" in custom_question:
-                st.session_state.current_question = "list"
-            elif "if" in custom_question or "조건" in custom_question:
-                st.session_state.current_question = "if_statement"
             else:
                 # Default to function explanation for any other question
                 st.session_state.current_question = "function"
@@ -386,10 +307,31 @@ def show_main_app():
             # Display chat history
             for i, chat in enumerate(st.session_state.chat_history):
                 # Question
-                st.container().markdown(f"**👦 학생**: {chat['question']}")
+                with st.chat_message("user", avatar="👦"):
+                    st.write(chat['question'])
                 
                 # Answer
-                st.container().markdown(f"**🤖 코드메이트**: {chat['answer']}")
+                with st.chat_message("assistant", avatar="🤖"):
+                    # Streamlit Cloud에서는 타이핑 효과를 빠르게 처리
+                    try:
+                        is_cloud = st.secrets.get("general", {}).get("is_streamlit_cloud", False)
+                    except:
+                        is_cloud = False
+                    
+                    if i == len(st.session_state.chat_history) - 1 and not is_cloud:
+                        # 로컬 환경에서는 타이핑 효과 적용
+                        message_placeholder = st.empty()
+                        full_answer = chat['answer']
+                        
+                        # Simulate typing (더 빠르게 설정)
+                        for k in range(len(full_answer) + 1):
+                            message_placeholder.markdown(full_answer[:k] + "▌")
+                            time.sleep(0.001)  # 타이핑 속도 상향 조정
+                        
+                        message_placeholder.markdown(full_answer)
+                    else:
+                        # Streamlit Cloud에서는 바로 표시
+                        st.markdown(chat['answer'])
     
     # Tab 2: Code practice
     with tabs[1]:
@@ -440,12 +382,18 @@ place_blocks("돌", 5)
             
             # Show feedback
             st.success("잘했어요! 함수를 올바르게 만들었습니다. 이제 다른 블록 타입과 개수로도 시도해보세요.")
+            
+            # Update learning progress
+            for concept in LEARNING_HISTORY['concepts']:
+                if concept['id'] == 'fun001':  # Function concept ID
+                    concept['understanding_level'] = min(5, concept['understanding_level'] + 1)
+                    concept['last_practiced'] = datetime.now().strftime("%Y-%m-%d")
     
     # Tab 3: Learning analysis
     with tabs[2]:
         st.header("학습 분석")
         
-        # Learning timeline
+        # Learning timeline - 날짜를 2025년으로 업데이트
         st.subheader("학습 타임라인")
         timeline_data = [
             {"date": "2025-05-15", "concept": "변수", "activity": "퀴즈 완료", "score": "90%"},
@@ -466,24 +414,24 @@ place_blocks("돌", 5)
             st.markdown("""
             ### 단기 목표
             1. **함수** 이해도 향상 (현재 1/5)
-               - 함수 기초 연습 문제 5개 풀기
-               - 함수를 사용한 간단한 게임 만들기
+                - 함수 기초 연습 문제 5개 풀기
+                - 함수를 사용한 간단한 게임 만들기
             
             2. **반복문** 이해도 향상 (현재 2/5)
-               - while과 for 반복문 차이점 학습
-               - 중첩 반복문 연습하기
+                - while과 for 반복문 차이점 학습
+                - 중첩 반복문 연습하기
             """)
         
         with col2:
             st.markdown("""
             ### 장기 목표
             1. **마인크래프트 모드 만들기**
-               - 필요 개념: 변수, 조건문, 반복문, 함수
-               - 예상 완료 시간: 3주
+                - 필요 개념: 변수, 조건문, 반복문, 함수
+                - 예상 완료 시간: 3주
             
             2. **간단한 웹 게임 개발**
-               - HTML, CSS, JavaScript 기초 학습
-               - 예상 완료 시간: 2개월
+                - HTML, CSS, JavaScript 기초 학습
+                - 예상 완료 시간: 2개월
             """)
         
         # Achievements
@@ -509,71 +457,66 @@ place_blocks("돌", 5)
             st.markdown("### ❓")
             st.markdown("**조건부 논리**")
             st.caption("2025-05-18 획득")
-            
-        # 추가 시각화 요소
-        
-        # 1. 학습 시간 데이터 생성 (데모용)
-        st.subheader("📊 주간 학습 시간")
-        days = ["월", "화", "수", "목", "금", "토", "일"]
-        study_hours = [1.2, 0.8, 1.5, 0.5, 2.0, 3.0, 1.0]
+    
+    # Tab 4: Teacher connection
+    with tabs[3]:
+        show_teacher_connection()
 
-        # 막대 그래프로 표시
-        fig_hours = px.bar(
-            x=days, 
-            y=study_hours,
-            text=study_hours,
-            color=study_hours,
-            color_continuous_scale="Blues",
-            title="지난 7일간 학습 시간 (시간)"
-        )
-        fig_hours.update_layout(xaxis_title="요일", yaxis_title="학습 시간 (시간)")
-        st.plotly_chart(fig_hours, use_container_width=True)
-
-        # 2. 개념별 이해도 레이더 차트
-        st.subheader("🕸 개념별 이해도")
-        concepts = [concept["name"] for concept in LEARNING_HISTORY["concepts"]]
-        understanding = [concept["understanding_level"] for concept in LEARNING_HISTORY["concepts"]]
-
-        fig_radar = go.Figure()
-        fig_radar.add_trace(go.Scatterpolar(
-            r=understanding,
-            theta=concepts,
-            fill='toself',
-            name='현재 이해도'
-        ))
-        fig_radar.update_layout(
-            polar=dict(
-                radialaxis=dict(
-                    visible=True,
-                    range=[0, 5]
-                )
-            ),
-            showlegend=False
-        )
-        st.plotly_chart(fig_radar, use_container_width=True)
-
-        # 3. 학습 진행도 시각화
-        st.subheader("🔄 학습 진행 상황")
-
-        # 진행 중인 과제 데이터 (데모용)
-        assignments = [
-            {"name": "파이썬 기초 미션", "progress": 80, "due": "2025-05-25"},
-            {"name": "함수 마스터 과제", "progress": 30, "due": "2025-05-30"},
-            {"name": "게임 프로젝트", "progress": 10, "due": "2025-06-15"}
-        ]
-
-        for idx, assignment in enumerate(assignments):
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                st.write(f"**{assignment['name']}** ({assignment['progress']}% 완료)")
-                st.progress(assignment['progress'] / 100)
-            with col2:
-                st.write(f"마감: {assignment['due']}")
-                days_left = (datetime.strptime(assignment['due'], "%Y-%m-%d") - datetime.now()).days
-                if days_left > 7:
-                    st.write(f"⏳ {days_left}일 남음")
-                else:
-                    st.write(f"⚠️ {days_left}일 남음")
+def show_teacher_connection():
+    st.title("👨‍🏫 선생님과 연결하기")
+    
+    st.markdown("""
+    ### 안녕하세요! 👋
+    코딩 문제를 해결하는 데 어려움을 겪고 계신가요? 선생님과 연결하여 도움을 받아보세요.
+    """)
+    
+    # 문제 설명 입력
+    problem_description = st.text_area(
+        "어떤 문제를 겪고 계신가요?",
+        placeholder="문제 상황을 자세히 설명해주세요. 예: 코드가 실행되지 않아요, 특정 기능을 구현하는 방법을 모르겠어요 등",
+        height=150
+    )
+    
+    # 코드 공유 (선택사항)
+    code_snippet = st.text_area(
+        "관련 코드가 있다면 공유해주세요 (선택사항)",
+        placeholder="문제가 발생하는 코드를 여기에 붙여넣어주세요",
+        height=150
+    )
+    
+    # 선생님 선택
+    teacher_type = st.selectbox(
+        "어떤 선생님의 도움이 필요하신가요?",
+        ["Python 선생님", "웹 개발 선생님", "게임 개발 선생님", "기타"]
+    )
+    
+    # 연락처 정보
+    contact_info = st.text_input(
+        "연락처 정보",
+        placeholder="이메일 또는 전화번호를 입력해주세요"
+    )
+    
+    # 제출 버튼
+    if st.button("선생님 연결 요청하기"):
+        if problem_description:
+            st.success("요청이 성공적으로 접수되었습니다! 선생님이 곧 연락드릴 예정입니다.")
+            st.info("평균 응답 시간: 24시간 이내")
+        else:
+            st.error("문제 설명을 입력해주세요.")
+    
+    # FAQ 섹션
+    st.markdown("""
+    ### 자주 묻는 질문
+    
+    **Q: 선생님 연결은 유료인가요?**  
+    A: 네, 선생님 연결 서비스는 유료입니다. 구체적인 가격은 선생님과 상담 후 결정됩니다.
+    
+    **Q: 얼마나 빨리 응답을 받을 수 있나요?**  
+    A: 일반적으로 24시간 이내에 응답을 받으실 수 있습니다.
+    
+    **Q: 어떤 종류의 문제를 도와드릴 수 있나요?**  
+    A: 코딩 관련 모든 문제를 도와드립니다. 문법, 디버깅, 알고리즘, 아키텍처 등 다양한 영역의 선생님이 있습니다.
+    """)
 
 # Main logic
 if st.session_state.logged_in:
