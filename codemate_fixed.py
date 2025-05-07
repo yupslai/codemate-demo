@@ -4,6 +4,8 @@ import json
 import random
 import time
 from datetime import datetime
+import pandas as pd
+import plotly.express as px
 
 # 로고 URL 설정 (로컬 파일 대신 URL 사용)
 LOGO_URL = "https://raw.githubusercontent.com/openai/openai-python/main/assets/logo.png"
@@ -209,7 +211,7 @@ def show_login():
 def show_main_app():
     # Sidebar
     with st.sidebar:
-        st.title("🤖 코드메이트")
+        st.title("�� 코드메이트")
         st.write(f"**안녕, {SAMPLE_USER['name']}!**")
         st.write(f"**나이:** {SAMPLE_USER['age']}세")
         st.write(f"**학년:** {SAMPLE_USER['grade']}학년")
@@ -250,7 +252,7 @@ def show_main_app():
             st.experimental_rerun()
     
     # Main content
-    st.title("코드메이트와 함께 코딩을 배워보세요! ��‍💻")
+    st.title("코드메이트와 함께 코딩을 배워보세요! 👨‍💻")
     
     # 선생님 연결하기 버튼이 클릭되었는지 확인
     if st.session_state.get('show_teacher_connection', False):
@@ -392,70 +394,116 @@ place_blocks("돌", 5)
         with tabs[2]:
             st.header("학습 분석")
             
-            # Learning timeline - 날짜를 2025년으로 업데이트
-            st.subheader("학습 타임라인")
+            # Learning timeline with more detailed data
+            st.subheader("📊 학습 타임라인")
             timeline_data = [
-                {"date": "2025-05-15", "concept": "변수", "activity": "퀴즈 완료", "score": "90%"},
-                {"date": "2025-05-18", "concept": "조건문", "activity": "실습 완료", "score": "75%"},
-                {"date": "2025-05-20", "concept": "반복문", "activity": "과제 제출", "score": "60%"},
-                {"date": "2025-05-22", "concept": "함수", "activity": "튜토리얼 완료", "score": "40%"}
+                {"date": "2025-05-15", "concept": "변수", "activity": "퀴즈 완료", "score": "90%", "time_spent": "45분"},
+                {"date": "2025-05-18", "concept": "조건문", "activity": "실습 완료", "score": "75%", "time_spent": "60분"},
+                {"date": "2025-05-20", "concept": "반복문", "activity": "과제 제출", "score": "60%", "time_spent": "90분"},
+                {"date": "2025-05-22", "concept": "함수", "activity": "튜토리얼 완료", "score": "40%", "time_spent": "30분"}
             ]
             
+            # Timeline visualization
+            st.markdown("### 📈 학습 진행도 그래프")
+            
+            # Convert timeline data to DataFrame format
+            df = pd.DataFrame(timeline_data)
+            df['score'] = df['score'].str.rstrip('%').astype('float')
+            
+            # Create line chart
+            fig = px.line(df, x='date', y='score', 
+                          title='개념별 이해도 변화',
+                          markers=True,
+                          labels={'score': '이해도 (%)', 'date': '날짜'})
+            fig.update_traces(line_color='#4B7BEC')
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Detailed timeline table
+            st.markdown("### 📅 상세 학습 이력")
             st.table(timeline_data)
             
-            # Learning recommendations
-            st.subheader("추천 학습 경로")
+            # Learning recommendations with more detail
+            st.subheader("🎯 맞춤형 학습 경로")
             st.info("현재 학습 데이터를 기반으로 한 맞춤형 추천입니다.")
             
             col1, col2 = st.columns(2)
             
             with col1:
                 st.markdown("""
-                ### 단기 목표
+                ### 단기 목표 (2주)
                 1. **함수** 이해도 향상 (현재 1/5)
                     - 함수 기초 연습 문제 5개 풀기
                     - 함수를 사용한 간단한 게임 만들기
+                    - 예상 소요 시간: 4시간
                 
                 2. **반복문** 이해도 향상 (현재 2/5)
                     - while과 for 반복문 차이점 학습
                     - 중첩 반복문 연습하기
+                    - 예상 소요 시간: 3시간
                 """)
             
             with col2:
                 st.markdown("""
-                ### 장기 목표
+                ### 장기 목표 (2개월)
                 1. **마인크래프트 모드 만들기**
                     - 필요 개념: 변수, 조건문, 반복문, 함수
                     - 예상 완료 시간: 3주
+                    - 난이도: ⭐⭐⭐
                 
                 2. **간단한 웹 게임 개발**
                     - HTML, CSS, JavaScript 기초 학습
                     - 예상 완료 시간: 2개월
+                    - 난이도: ⭐⭐⭐⭐
                 """)
             
-            # Achievements
-            st.subheader("획득한 업적")
+            # Enhanced achievements system
+            st.subheader("🏆 업적 시스템")
+            
+            # Achievement categories
+            achievement_categories = {
+                "기초 마스터": [
+                    {"name": "첫 코드 작성", "icon": "🏆", "date": "2025-05-10", "progress": "100%"},
+                    {"name": "변수 마스터", "icon": "🌟", "date": "2025-05-15", "progress": "100%"},
+                    {"name": "반복문 탐험가", "icon": "🔄", "date": "2025-05-20", "progress": "60%"},
+                    {"name": "조건부 논리", "icon": "❓", "date": "2025-05-18", "progress": "75%"}
+                ],
+                "프로젝트": [
+                    {"name": "미니 게임 제작", "icon": "🎮", "date": "진행 중", "progress": "30%"},
+                    {"name": "웹사이트 제작", "icon": "🌐", "date": "예정", "progress": "0%"}
+                ],
+                "특별 도전": [
+                    {"name": "100일 코딩", "icon": "🔥", "date": "진행 중", "progress": "45%"},
+                    {"name": "코드 리뷰어", "icon": "👀", "date": "예정", "progress": "0%"}
+                ]
+            }
+            
+            # Display achievements in tabs
+            achievement_tabs = st.tabs(list(achievement_categories.keys()))
+            
+            for i, (category, achievements) in enumerate(achievement_categories.items()):
+                with achievement_tabs[i]:
+                    for achievement in achievements:
+                        col1, col2, col3 = st.columns([1, 3, 1])
+                        with col1:
+                            st.markdown(f"### {achievement['icon']}")
+                        with col2:
+                            st.markdown(f"**{achievement['name']}**")
+                            st.progress(float(achievement['progress'].rstrip('%')) / 100)
+                        with col3:
+                            st.caption(achievement['date'])
+            
+            # Learning statistics
+            st.subheader("📊 학습 통계")
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
-                st.markdown("### 🏆")
-                st.markdown("**첫 코드 작성**")
-                st.caption("2025-05-10 획득")
-            
+                st.metric("총 학습 시간", "225분")
             with col2:
-                st.markdown("### 🌟")
-                st.markdown("**변수 마스터**")
-                st.caption("2025-05-15 획득")
-            
+                st.metric("완료한 문제", "12개")
             with col3:
-                st.markdown("### 🔄")
-                st.markdown("**반복문 탐험가**")
-                st.caption("2025-05-20 획득")
-            
+                st.metric("평균 점수", "66%")
             with col4:
-                st.markdown("### ❓")
-                st.markdown("**조건부 논리**")
-                st.caption("2025-05-18 획득")
+                st.metric("획득한 업적", "4개")
         
         # Tab 4: Teacher connection
         with tabs[3]:
