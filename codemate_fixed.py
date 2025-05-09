@@ -321,10 +321,10 @@ def show_login():
         
         with col1:
             st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-            # 로봇 이미지 추가
+            # 남자 학생 이미지로 변경
             st.markdown("""
             <div style='text-align: center;'>
-                <img src='https://raw.githubusercontent.com/streamlit/streamlit/main/docs/images/logo.png' 
+                <img src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png' 
                      style='width: 200px; height: 200px; object-fit: contain;'>
             </div>
             """, unsafe_allow_html=True)
@@ -395,7 +395,7 @@ def show_main_app():
         st.divider()
         
         # 선생님 연결하기 버튼
-        if st.button("👨‍�� 선생님과 연결하기", help="코딩 문제로 어려움을 겪고 계신가요? 선생님과 연결해보세요!"):
+        if st.button("👨‍🏫 선생님과 연결하기", help="코딩 문제로 어려움을 겪고 계신가요? 선생님과 연결해보세요!"):
             st.session_state.show_teacher_connection = True
             st.experimental_rerun()
         
@@ -532,11 +532,11 @@ def show_main_app():
             )
             
             # 학습 경로 표시
-            st.subheader("📈 나의 마인크래프트 코딩 여정")
+            st.subheader("�� 나의 마인크래프트 코딩 여정")
             learning_path = [
                 {"step": 1, "title": "기본 블록 놓기", "status": "완료", "icon": "✅"},
                 {"step": 2, "title": "자동 건축 기초", "status": "완료", "icon": "✅"},
-                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": "🔄"},
+                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": "��"},
                 {"step": 4, "title": "모드 개발 기초", "status": "예정", "icon": "⏳"},
                 {"step": 5, "title": "서버 관리", "status": "예정", "icon": "⏳"}
             ]
@@ -576,8 +576,8 @@ def show_main_app():
                         input_buffer = []
                         def mock_input(prompt=""):
                             if not input_buffer:
-                                # 사용자로부터 입력 받기
-                                user_input = st.text_input(prompt, key=f"input_{len(input_buffer)}")
+                                # 사용자로부터 입력 받기 (unique key 생성)
+                                user_input = st.text_input(prompt, key=f"input_{time.time()}")
                                 if user_input:
                                     input_buffer.append(user_input)
                                     return user_input
