@@ -5,7 +5,7 @@ import random
 import time
 from datetime import datetime
 
-# 로고 URL 설정 (로컬 파일 대신 URL 사용)
+# 로고 URL 설정
 LOGO_URL = "https://raw.githubusercontent.com/openai/openai-python/main/assets/logo.png"
 
 # Simulated user data
@@ -27,7 +27,6 @@ LEARNING_HISTORY = {
         {"id": "fun001", "name": "함수", "understanding_level": 1, "last_practiced": "2023-09-22"}
     ]
 }
-
 # Sample questions and answers for demonstration
 SAMPLE_QA = {
     "while_loop": {
@@ -139,7 +138,6 @@ print(f"내 인벤토리에 다이아몬드가 {다이아몬드}개 있어요!")
         """
     }
 }
-
 # App configuration
 st.set_page_config(
     page_title="CodeMate - 코딩 AI 튜터 데모",
@@ -234,8 +232,7 @@ def show_login():
             st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
-
-# Main application
+        # Main application
 def show_main_app():
     # Sidebar
     with st.sidebar:
@@ -280,7 +277,7 @@ def show_main_app():
             st.experimental_rerun()
     
     # Main content
-    st.title("CodeMate와 함께 코딩을 배워보세요! 👨‍💻")
+    st.title("CodeMate와 함께 코딩을 배워보세요! ��‍💻")
     
     # 선생님 연결하기 버튼이 클릭되었는지 확인
     if st.session_state.get('show_teacher_connection', False):
@@ -361,8 +358,7 @@ def show_main_app():
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-        
-        # Tab 2: Code practice
+                            # Tab 2: Code practice
         with tabs[1]:
             st.header("코드 연습")
             
@@ -407,11 +403,11 @@ def show_main_app():
             )
             
             # 학습 경로 표시
-            st.subheader("📈 나의 마인크래프트 코딩 여정")
+            st.subheader("�� 나의 마인크래프트 코딩 여정")
             learning_path = [
                 {"step": 1, "title": "기본 블록 놓기", "status": "완료", "icon": "✅"},
                 {"step": 2, "title": "자동 건축 기초", "status": "완료", "icon": "✅"},
-                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": "🔄"},
+                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": "��"},
                 {"step": 4, "title": "모드 개발 기초", "status": "예정", "icon": "⏳"},
                 {"step": 5, "title": "서버 관리", "status": "예정", "icon": "⏳"}
             ]
@@ -678,8 +674,7 @@ manage_server_data()""",
                         st.error(f"코드 실행 중 오류가 발생했습니다: {str(e)}")
             else:
                 st.info("선택한 난이도와 주제에 맞는 문제가 준비 중입니다.")
-        
-        # Tab 3: Learning analysis
+                        # Tab 3: Learning analysis
         with tabs[2]:
             st.header("학습 분석")
             
@@ -755,7 +750,7 @@ manage_server_data()""",
                 "기초 마스터": [
                     {"name": "첫 코드 작성", "icon": "🏆", "date": "2025-05-10", "progress": "100%"},
                     {"name": "변수 마스터", "icon": "🌟", "date": "2025-05-15", "progress": "100%"},
-                    {"name": "반복문 탐험가", "icon": "🔄", "date": "2025-05-20", "progress": "60%"},
+                    {"name": "반복문 탐험가", "icon": "��", "date": "2025-05-20", "progress": "60%"},
                     {"name": "조건부 논리", "icon": "❓", "date": "2025-05-18", "progress": "75%"}
                 ],
                 "프로젝트": [
