@@ -4,6 +4,8 @@ import json
 import random
 import time
 from datetime import datetime
+from io import StringIO
+import sys
 
 # 로고 URL 설정 (로컬 파일 대신 URL 사용)
 LOGO_URL = "https://raw.githubusercontent.com/openai/openai-python/main/assets/logo.png"
@@ -139,6 +141,7 @@ print(f"내 인벤토리에 다이아몬드가 {다이아몬드}개 있어요!")
         """
     }
 }
+
 # Practice problems for code practice tab
 practice_problems = {
     "초급": {
@@ -148,15 +151,7 @@ practice_problems = {
             "template": """def place_block():
     # 여기에 코드를 작성하세요
     block_type = input("어떤 블록을 놓을까요? (돌, 나무, 흙): ")
-    if not block_type:
-        block_type = "돌"  # 기본값 설정
-    
-    try:
-        count = int(input("몇 개를 놓을까요? "))
-        if count <= 0:
-            count = 1  # 기본값 설정
-    except ValueError:
-        count = 1  # 기본값 설정
+    count = int(input("몇 개를 놓을까요? "))
     
     # 블록을 놓는 코드를 작성하세요
     for i in range(count):
@@ -265,9 +260,46 @@ zombie.take_damage(10)
 zombie.take_damage(15)""",
             "hint": "몬스터의 상태를 클래스 변수로 관리하면 좋아요!",
             "next_steps": "이제 이 몬스터들을 서버에서 관리하는 방법을 배워볼까요?"
+        },
+        "예외 처리": {
+            "title": "마인크래프트 서버 관리",
+            "description": "마인크래프트 서버의 플레이어 데이터를 관리하는 프로그램을 작성하세요.",
+            "template": """def manage_server_data():
+    # 여기에 코드를 작성하세요
+    players = {
+        "player1": {"level": 10, "items": ["다이아몬드 검", "철 갑옷"]},
+        "player2": {"level": 5, "items": ["나무 검", "가죽 갑옷"]}
+    }
+    
+    try:
+        # 플레이어 데이터 출력
+        print("서버 플레이어 목록:")
+        for player, data in players.items():
+            print(f"\\n{player}:")
+            print(f"  레벨: {data['level']}")
+            print(f"  아이템: {', '.join(data['items'])}")
+        
+        # 플레이어 검색
+        search_player = input("\\n검색할 플레이어 이름을 입력하세요: ")
+        if search_player in players:
+            print(f"\\n{search_player}의 정보:")
+            print(f"레벨: {players[search_player]['level']}")
+            print(f"아이템: {', '.join(players[search_player]['items'])}")
+        else:
+            print(f"\\n{search_player} 플레이어를 찾을 수 없습니다!")
+            
+    except Exception as e:
+        print(f"오류가 발생했습니다: {str(e)}")
+        print("서버 데이터를 다시 확인해주세요.")
+
+# 함수 실행
+manage_server_data()""",
+            "hint": "서버 데이터를 안전하게 저장하고 불러오는 방법을 생각해보세요!",
+            "next_steps": "축하합니다! 이제 마인크래프트 모드 개발의 기초를 모두 배웠어요!"
         }
     }
 }
+
 # App configuration
 st.set_page_config(
     page_title="CodeMate - 코딩 AI 튜터 데모",
@@ -329,10 +361,11 @@ def show_login():
         
         with col1:
             st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-            # 남자 아이 이모지로 변경
+            # 로봇 이미지 추가
             st.markdown("""
             <div style='text-align: center;'>
-                <span style='font-size: 100px;'>👦</span>
+                <img src='https://raw.githubusercontent.com/streamlit/streamlit/main/docs/images/logo.png' 
+                     style='width: 200px; height: 200px; object-fit: contain;'>
             </div>
             """, unsafe_allow_html=True)
             st.markdown('<h3 class="centered-text">개인 맞춤형 학습 경험</h3>', unsafe_allow_html=True)
@@ -366,7 +399,8 @@ def show_login():
             st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
-        # Main application
+
+# Main application
 def show_main_app():
     # Sidebar
     with st.sidebar:
@@ -411,7 +445,7 @@ def show_main_app():
             st.experimental_rerun()
     
     # Main content
-    st.title("CodeMate와 함께 코딩을 배워보세요!‍💻")
+    st.title("CodeMate와 함께 코딩을 배워보세요! 👨‍💻")
     
     # 선생님 연결하기 버튼이 클릭되었는지 확인
     if st.session_state.get('show_teacher_connection', False):
@@ -494,7 +528,40 @@ def show_main_app():
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-                            # Tab 2: Code practice
+                
+                # 추가 질문 버튼
+                st.markdown("### 더 궁금한 점이 있으신가요?")
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    if st.button("예제 코드 보여줘"):
+                        st.code("""
+# 마인크래프트에서 블록 놓기 예제
+def place_blocks():
+    for i in range(5):
+        print(f"{i+1}번째 블록을 놓았습니다!")
+        time.sleep(1)  # 1초 대기
+""", language="python")
+                
+                with col2:
+                    if st.button("실습 문제 풀기"):
+                        st.info("""
+                        ### 실습 문제
+                        1. 10개의 블록을 자동으로 놓는 코드를 작성해보세요.
+                        2. 블록을 놓을 때마다 현재까지 놓은 블록의 개수를 출력하세요.
+                        3. 마지막에 총 놓은 블록의 개수를 출력하세요.
+                        """)
+                
+                with col3:
+                    if st.button("다음 단계 학습하기"):
+                        st.success("""
+                        ### 다음 단계 학습 내용
+                        1. 조건문을 사용한 블록 놓기
+                        2. 함수를 사용한 자동 건축
+                        3. 클래스를 사용한 마인크래프트 모드 만들기
+                        """)
+        
+        # Tab 2: Code practice
         with tabs[1]:
             st.header("코드 연습")
             
@@ -539,11 +606,11 @@ def show_main_app():
             )
             
             # 학습 경로 표시
-            st.subheader(" 나의 마인크래프트 코딩 여정")
+            st.subheader("📈 나의 마인크래프트 코딩 여정")
             learning_path = [
                 {"step": 1, "title": "기본 블록 놓기", "status": "완료", "icon": "✅"},
                 {"step": 2, "title": "자동 건축 기초", "status": "완료", "icon": "✅"},
-                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": ""},
+                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": "🔄"},
                 {"step": 4, "title": "모드 개발 기초", "status": "예정", "icon": "⏳"},
                 {"step": 5, "title": "서버 관리", "status": "예정", "icon": "⏳"}
             ]
@@ -552,6 +619,200 @@ def show_main_app():
                 st.markdown(f"""
                 {step['icon']} **Step {step['step']}**: {step['title']} - {step['status']}
                 """)
+            
+            # 문제 목록 (예시)
+            practice_problems = {
+                "초급": {
+                    "마인크래프트 기초": {
+                        "title": "마인크래프트 블록 놓기",
+                        "description": "마인크래프트에서 블록을 놓는 간단한 프로그램을 작성하세요.",
+                        "template": """def place_block():
+    # 여기에 코드를 작성하세요
+    block_type = input("어떤 블록을 놓을까요? (돌, 나무, 흙): ")
+    count = int(input("몇 개를 놓을까요? "))
+    
+    # 블록을 놓는 코드를 작성하세요
+    for i in range(count):
+        print(f"{i+1}번째 {block_type} 블록을 놓았습니다!")
+    print(f"총 {count}개의 {block_type} 블록을 놓았습니다!")
+
+# 함수 실행
+place_block()""",
+                        "hint": "for 반복문을 사용해서 블록을 여러 개 놓아보세요!",
+                        "next_steps": "다음으로는 자동으로 건물을 짓는 방법을 배워볼까요?"
+                    },
+                    "변수와 연산자": {
+                        "title": "마인크래프트 인벤토리 관리",
+                        "description": "마인크래프트 인벤토리의 아이템 개수를 관리하는 프로그램을 작성하세요.",
+                        "template": """def manage_inventory():
+    # 여기에 코드를 작성하세요
+    inventory = {
+        "다이아몬드": 5,
+        "철": 10,
+        "나무": 20
+    }
+    
+    # 인벤토리 출력
+    print("현재 인벤토리:")
+    for item, count in inventory.items():
+        print(f"{item}: {count}개")
+    
+    # 아이템 추가
+    item = input("어떤 아이템을 추가할까요? (다이아몬드, 철, 나무): ")
+    amount = int(input("몇 개를 추가할까요? "))
+    
+    if item in inventory:
+        inventory[item] += amount
+        print(f"{item} {amount}개를 추가했습니다!")
+    else:
+        print("그런 아이템은 없습니다!")
+    
+    # 최종 인벤토리 출력
+    print("\\n최종 인벤토리:")
+    for item, count in inventory.items():
+        print(f"{item}: {count}개")
+
+# 함수 실행
+manage_inventory()""",
+                        "hint": "딕셔너리의 값을 수정하는 방법을 사용해보세요!",
+                        "next_steps": "이제 이 인벤토리를 이용해서 자동으로 아이템을 사용하는 방법을 배워볼까요?"
+                    }
+                },
+                "중급": {
+                    "함수": {
+                        "title": "마인크래프트 자동 건축",
+                        "description": "마인크래프트에서 자동으로 건물을 짓는 함수를 만들어보세요.",
+                        "template": """def build_house(x, y, z, size):
+    # 이 함수는 주어진 위치에 size 크기의 집을 지어야 합니다
+    print(f"위치 ({x}, {y}, {z})에 {size} 크기의 집을 짓기 시작합니다!")
+    
+    # 기초 공사
+    print("1. 기초 공사 중...")
+    for i in range(size):
+        print(f"   - 기초 블록 {i+1}/{size} 설치")
+    
+    # 벽 건설
+    print("2. 벽 건설 중...")
+    for i in range(size):
+        print(f"   - 벽 블록 {i+1}/{size} 설치")
+    
+    # 지붕 설치
+    print("3. 지붕 설치 중...")
+    for i in range(size):
+        print(f"   - 지붕 블록 {i+1}/{size} 설치")
+    
+    print(f"집이 완성되었습니다! 위치: ({x}, {y}, {z}), 크기: {size}")
+
+# 함수 실행
+build_house(10, 0, 15, 5)""",
+                        "hint": "집을 지을 때는 기초 → 벽 → 지붕 순서로 만들어보세요!",
+                        "next_steps": "다음으로는 더 복잡한 건물을 자동으로 짓는 방법을 배워볼까요?"
+                    },
+                    "리스트와 딕셔너리": {
+                        "title": "마인크래프트 모드 아이템 관리",
+                        "description": "마인크래프트 모드의 새로운 아이템을 관리하는 프로그램을 작성하세요.",
+                        "template": """def manage_mod_items():
+    # 여기에 코드를 작성하세요
+    mod_items = {
+        "마법 지팡이": {"공격력": 10, "내구도": 100},
+        "텔레포트 링": {"사용 횟수": 3, "쿨다운": 60}
+    }
+    
+    # 아이템 목록 출력
+    print("사용 가능한 아이템:")
+    for item, stats in mod_items.items():
+        print(f"\\n{item}:")
+        for stat, value in stats.items():
+            print(f"  - {stat}: {value}")
+    
+    # 아이템 사용
+    item = input("\\n어떤 아이템을 사용할까요? (마법 지팡이, 텔레포트 링): ")
+    
+    if item in mod_items:
+        print(f"\\n{item} 사용 중...")
+        if item == "마법 지팡이":
+            mod_items[item]["내구도"] -= 10
+            print(f"마법 지팡이의 남은 내구도: {mod_items[item]['내구도']}")
+        elif item == "텔레포트 링":
+            mod_items[item]["사용 횟수"] -= 1
+            print(f"텔레포트 링의 남은 사용 횟수: {mod_items[item]['사용 횟수']}")
+    else:
+        print("그런 아이템은 없습니다!")
+
+# 함수 실행
+manage_mod_items()""",
+                        "hint": "아이템의 속성을 딕셔너리로 관리하면 편리해요!",
+                        "next_steps": "이제 이 아이템들을 사용하는 새로운 몬스터를 만들어볼까요?"
+                    }
+                },
+                "고급": {
+                    "클래스와 객체": {
+                        "title": "마인크래프트 모드 개발",
+                        "description": "마인크래프트 모드의 새로운 몬스터 클래스를 구현하세요.",
+                        "template": """class MinecraftMonster:
+    def __init__(self, name, health, attack_power):
+        self.name = name
+        self.health = health
+        self.attack_power = attack_power
+        print(f"{name}이(가) 생성되었습니다! 체력: {health}, 공격력: {attack_power}")
+    
+    def attack(self, target):
+        print(f"{self.name}이(가) {target}을(를) 공격합니다!")
+        print(f"공격력 {self.attack_power}의 데미지를 입혔습니다!")
+    
+    def take_damage(self, amount):
+        self.health -= amount
+        print(f"{self.name}이(가) {amount}의 데미지를 입었습니다!")
+        print(f"남은 체력: {self.health}")
+        if self.health <= 0:
+            print(f"{self.name}이(가) 쓰러졌습니다!")
+
+# 몬스터 생성 및 테스트
+zombie = MinecraftMonster("좀비", 20, 5)
+zombie.attack("플레이어")
+zombie.take_damage(10)
+zombie.take_damage(15)""",
+                        "hint": "몬스터의 상태를 클래스 변수로 관리하면 좋아요!",
+                        "next_steps": "이제 이 몬스터들을 서버에서 관리하는 방법을 배워볼까요?"
+                    },
+                    "예외 처리": {
+                        "title": "마인크래프트 서버 관리",
+                        "description": "마인크래프트 서버의 플레이어 데이터를 관리하는 프로그램을 작성하세요.",
+                        "template": """def manage_server_data():
+    # 여기에 코드를 작성하세요
+    players = {
+        "player1": {"level": 10, "items": ["다이아몬드 검", "철 갑옷"]},
+        "player2": {"level": 5, "items": ["나무 검", "가죽 갑옷"]}
+    }
+    
+    try:
+        # 플레이어 데이터 출력
+        print("서버 플레이어 목록:")
+        for player, data in players.items():
+            print(f"\\n{player}:")
+            print(f"  레벨: {data['level']}")
+            print(f"  아이템: {', '.join(data['items'])}")
+        
+        # 플레이어 검색
+        search_player = input("\\n검색할 플레이어 이름을 입력하세요: ")
+        if search_player in players:
+            print(f"\\n{search_player}의 정보:")
+            print(f"레벨: {players[search_player]['level']}")
+            print(f"아이템: {', '.join(players[search_player]['items'])}")
+        else:
+            print(f"\\n{search_player} 플레이어를 찾을 수 없습니다!")
+            
+    except Exception as e:
+        print(f"오류가 발생했습니다: {str(e)}")
+        print("서버 데이터를 다시 확인해주세요.")
+
+# 함수 실행
+manage_server_data()""",
+                        "hint": "서버 데이터를 안전하게 저장하고 불러오는 방법을 생각해보세요!",
+                        "next_steps": "축하합니다! 이제 마인크래프트 모드 개발의 기초를 모두 배웠어요!"
+                    }
+                }
+            }
             
             # 선택된 문제 표시
             if difficulty in practice_problems and topic in practice_problems[difficulty]:
@@ -572,96 +833,109 @@ def show_main_app():
                 
                 # 실행 버튼
                 if st.button("실행하기"):
-                    st.subheader("실행 결과:")
-                    try:
-                        # 표준 입출력 리다이렉션을 위한 설정
-                        import sys
-                        from io import StringIO
-                        import contextlib
+                    # 사용자 입력 처리
+                    user_input = user_code
+                    if not user_input:
+                        st.warning("코드를 입력해주세요!")
+                        return
 
-                        # 사용자 입력을 처리하기 위한 입력 버퍼
-                        input_buffer = []
-                        def mock_input(prompt=""):
-                            if not input_buffer:
-                                # 사용자로부터 입력 받기 (unique key 생성)
-                                user_input = st.text_input(prompt, key=f"input_{time.time()}")
-                                if user_input:
-                                    input_buffer.append(user_input)
-                                    return user_input
-                                return "0"  # 기본값으로 0을 반환
-                            return input_buffer.pop(0)
+                    # 입력값 처리
+                    input_values = {}
+                    for i, input_field in enumerate(input_fields):
+                        key = f"input_{i}"
+                        if key in st.session_state:
+                            input_values[i] = st.session_state[key]
 
-                        # 표준 출력을 캡처하기 위한 StringIO 객체
+                    # 코드 실행 결과 표시
+                    with st.expander("실행 결과", expanded=True):
+                        # 표준 출력과 에러를 캡처하기 위한 StringIO 객체
                         output = StringIO()
-                        
-                        # 코드 실행
-                        with contextlib.redirect_stdout(output):
-                            # input 함수를 mock_input으로 대체
-                            sys.modules['builtins'].input = mock_input
-                            exec(user_code)
-                            # 원래 input 함수로 복원
-                            sys.modules['builtins'].input = input
+                        error_output = StringIO()
+                        sys.stdout = output
+                        sys.stderr = error_output
 
-                        # 실행 결과 표시
-                        result = output.getvalue()
-                        if result:
-                            # 결과를 더 보기 좋게 포맷팅
-                            formatted_result = ""
-                            for line in result.split('\n'):
-                                if line.strip():
-                                    if "블록을 놓았습니다" in line:
-                                        formatted_result += f"🎮 {line}\n"
-                                    elif "집을 짓기 시작합니다" in line:
-                                        formatted_result += f"🏠 {line}\n"
-                                    elif "기초 공사" in line or "벽 건설" in line or "지붕 설치" in line:
-                                        formatted_result += f"🏗️ {line}\n"
-                                    elif "생성되었습니다" in line:
-                                        formatted_result += f"👾 {line}\n"
-                                    elif "공격합니다" in line:
-                                        formatted_result += f"⚔️ {line}\n"
-                                    elif "데미지를 입혔습니다" in line or "데미지를 입었습니다" in line:
-                                        formatted_result += f"💥 {line}\n"
-                                    elif "쓰러졌습니다" in line:
-                                        formatted_result += f"💀 {line}\n"
-                                    else:
-                                        formatted_result += f"{line}\n"
-                            
-                            st.markdown(f"""
-                            <div style='background-color: #f0f2f6; padding: 15px; border-radius: 10px; margin: 10px 0;'>
-                                <pre style='margin: 0;'>{formatted_result}</pre>
-                            </div>
-                            """, unsafe_allow_html=True)
-                        
-                        st.success("코드가 성공적으로 실행되었습니다!")
-                        
-                        # 피드백 제공
-                        st.info("""
-                        ### 피드백
-                        - 코드가 정상적으로 실행되었습니다.
-                        - 마인크래프트 관련 기능이 잘 구현되었습니다.
-                        - 다음 단계로 넘어갈 준비가 되었습니다!
-                        """)
-                        
-                        # 다음 단계 제안
-                        st.markdown(f"""
-                        ### 다음 단계
-                        {problem['next_steps']}
-                        - 코드를 더 효율적으로 개선해보세요.
-                        - 다른 입력값으로 테스트해보세요.
-                        - 예외 처리를 추가해보세요.
-                        """)
-                        
-                    except Exception as e:
-                        st.error(f"코드 실행 중 오류가 발생했습니다: {str(e)}")
-                        st.info("""
-                        ### 도움이 필요하신가요?
-                        - 힌트를 확인해보세요.
-                        - 선생님과 연결하기를 통해 도움을 받을 수 있습니다.
-                        - 다른 난이도의 문제를 시도해보세요.
-                        """)
+                        # 입력값을 처리하기 위한 mock_input 함수
+                        def mock_input(prompt):
+                            # prompt에서 입력 번호 추출
+                            try:
+                                input_num = int(prompt.split()[1]) - 1
+                                return input_values.get(input_num, "0")  # 기본값 0으로 설정
+                            except:
+                                return "0"  # 기본값 0으로 설정
+
+                        # 코드 실행
+                        try:
+                            # 코드 실행 전에 필요한 변수 초기화
+                            block_type = "돌"  # 기본값 설정
+                            count = 1  # 기본값 설정
+
+                            # 코드 실행
+                            exec(user_input, {"input": mock_input, "print": print, "range": range, "len": len, "str": str, "int": int, "float": float, "list": list, "dict": dict, "set": set, "tuple": tuple, "True": True, "False": False, "None": None, "block_type": block_type, "count": count})
+
+                            # 실행 결과 가져오기
+                            result = output.getvalue()
+                            error = error_output.getvalue()
+
+                            # 결과 표시
+                            if result:
+                                # 결과를 더 보기 좋게 포맷팅
+                                formatted_result = result.replace("번째", "번째 🧱").replace("블록을 놓았습니다", "블록을 놓았습니다! 🎮").replace("총", "총 🎯").replace("개의", "개의 🧱").replace("블록을 놓았습니다", "블록을 놓았습니다! 🎮")
+                                st.success("코드가 성공적으로 실행되었습니다! 🎉")
+                                st.code(formatted_result, language="python")
+                                
+                                # 성공 시나리오 피드백
+                                st.info("""
+                                🎮 마인크래프트 관련 기능이 잘 구현되었습니다!
+                                다음 단계를 제안합니다:
+                                1. 코드를 더 효율적으로 개선해보세요
+                                2. 다른 입력값으로 테스트해보세요
+                                3. 새로운 기능을 추가해보세요
+                                """)
+                            if error:
+                                st.error("실행 중 오류가 발생했습니다:")
+                                st.code(error, language="python")
+                                
+                                # 오류 발생 시나리오 피드백
+                                if "NameError" in error:
+                                    st.warning("""
+                                    🔍 변수나 함수 이름이 정의되지 않았습니다.
+                                    해결 방법: 변수나 함수를 사용하기 전에 정의했는지 확인하세요.
+                                    예시: `block_type = "돌"`과 같이 변수를 먼저 정의해야 합니다.
+                                    """)
+                                elif "SyntaxError" in error:
+                                    st.warning("""
+                                    🔍 코드 문법에 오류가 있습니다.
+                                    해결 방법: 괄호, 들여쓰기, 콜론 등을 확인하세요.
+                                    예시: `if` 문 뒤에는 콜론(`:`)이 필요합니다.
+                                    """)
+                                elif "TypeError" in error:
+                                    st.warning("""
+                                    🔍 데이터 타입이 맞지 않습니다.
+                                    해결 방법: 문자열과 숫자를 함께 사용할 때는 형변환이 필요합니다.
+                                    예시: `str(count)`로 숫자를 문자열로 변환하세요.
+                                    """)
+                                else:
+                                    st.warning("""
+                                    🔍 다른 오류가 발생했습니다.
+                                    해결 방법: 코드를 다시 한 번 확인해보세요.
+                                    힌트: 문제의 힌트를 참고하거나 선생님과 상담해보세요.
+                                    """)
+
+                        except Exception as e:
+                            st.error(f"실행 중 오류가 발생했습니다: {str(e)}")
+                            st.warning("""
+                            🔍 오류가 발생했습니다.
+                            해결 방법: 코드를 다시 한 번 확인해보세요.
+                            힌트: 문제의 힌트를 참고하거나 선생님과 상담해보세요.
+                            """)
+                        finally:
+                            # 표준 출력과 에러를 원래대로 복구
+                            sys.stdout = sys.__stdout__
+                            sys.stderr = sys.__stderr__
             else:
                 st.info("선택한 난이도와 주제에 맞는 문제가 준비 중입니다.")
-                        # Tab 3: Learning analysis
+        
+        # Tab 3: Learning analysis
         with tabs[2]:
             st.header("학습 분석")
             
@@ -777,7 +1051,8 @@ def show_main_app():
                 st.metric("평균 점수", "66%")
             with col4:
                 st.metric("획득한 업적", "4개")
-                        # Tab 4: Teacher connection
+        
+        # Tab 4: Teacher connection
         with tabs[3]:
             show_teacher_connection()
 
@@ -853,4 +1128,4 @@ else:
 
 # Footer
 st.divider()
-st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터")
+st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터") 
