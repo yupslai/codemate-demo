@@ -840,10 +840,11 @@ manage_server_data()""",
 
                     # 입력값 처리
                     input_values = {}
-                    for i, input_field in enumerate(input_fields):
-                        key = f"input_{i}"
-                        if key in st.session_state:
-                            input_values[i] = st.session_state[key]
+                    # input_fields 대신 직접 입력값 처리
+                    if "input_0" in st.session_state:
+                        input_values[0] = st.session_state["input_0"]
+                    if "input_1" in st.session_state:
+                        input_values[1] = st.session_state["input_1"]
 
                     # 코드 실행 결과 표시
                     with st.expander("실행 결과", expanded=True):
