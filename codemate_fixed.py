@@ -361,11 +361,10 @@ def show_login():
         
         with col1:
             st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-            # 로봇 이미지 추가
+            # 이모지 아이콘 추가
             st.markdown("""
-            <div style='text-align: center;'>
-                <img src='https://raw.githubusercontent.com/streamlit/streamlit/main/docs/images/logo.png' 
-                     style='width: 200px; height: 200px; object-fit: contain;'>
+            <div style='text-align: center; font-size: 100px;'>
+                👦
             </div>
             """, unsafe_allow_html=True)
             st.markdown('<h3 class="centered-text">개인 맞춤형 학습 경험</h3>', unsafe_allow_html=True)
