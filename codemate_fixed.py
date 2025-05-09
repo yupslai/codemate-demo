@@ -148,7 +148,15 @@ practice_problems = {
             "template": """def place_block():
     # 여기에 코드를 작성하세요
     block_type = input("어떤 블록을 놓을까요? (돌, 나무, 흙): ")
-    count = int(input("몇 개를 놓을까요? "))
+    if not block_type:
+        block_type = "돌"  # 기본값 설정
+    
+    try:
+        count = int(input("몇 개를 놓을까요? "))
+        if count <= 0:
+            count = 1  # 기본값 설정
+    except ValueError:
+        count = 1  # 기본값 설정
     
     # 블록을 놓는 코드를 작성하세요
     for i in range(count):
@@ -321,11 +329,10 @@ def show_login():
         
         with col1:
             st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-            # 남자 학생 이미지로 변경
+            # 남자 아이 이모지로 변경
             st.markdown("""
             <div style='text-align: center;'>
-                <img src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png' 
-                     style='width: 200px; height: 200px; object-fit: contain;'>
+                <span style='font-size: 100px;'>👦</span>
             </div>
             """, unsafe_allow_html=True)
             st.markdown('<h3 class="centered-text">개인 맞춤형 학습 경험</h3>', unsafe_allow_html=True)
@@ -404,7 +411,7 @@ def show_main_app():
             st.experimental_rerun()
     
     # Main content
-    st.title("CodeMate와 함께 코딩을 배워보세요! ��‍💻")
+    st.title("CodeMate와 함께 코딩을 배워보세요!‍💻")
     
     # 선생님 연결하기 버튼이 클릭되었는지 확인
     if st.session_state.get('show_teacher_connection', False):
@@ -532,11 +539,11 @@ def show_main_app():
             )
             
             # 학습 경로 표시
-            st.subheader("�� 나의 마인크래프트 코딩 여정")
+            st.subheader(" 나의 마인크래프트 코딩 여정")
             learning_path = [
                 {"step": 1, "title": "기본 블록 놓기", "status": "완료", "icon": "✅"},
                 {"step": 2, "title": "자동 건축 기초", "status": "완료", "icon": "✅"},
-                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": "��"},
+                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": ""},
                 {"step": 4, "title": "모드 개발 기초", "status": "예정", "icon": "⏳"},
                 {"step": 5, "title": "서버 관리", "status": "예정", "icon": "⏳"}
             ]
@@ -581,7 +588,7 @@ def show_main_app():
                                 if user_input:
                                     input_buffer.append(user_input)
                                     return user_input
-                                return ""
+                                return "0"  # 기본값으로 0을 반환
                             return input_buffer.pop(0)
 
                         # 표준 출력을 캡처하기 위한 StringIO 객체
