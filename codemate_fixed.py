@@ -47,14 +47,6 @@ while blocks_placed < 10:
     print(f"{blocks_placed}번째 블록을 놓았어요!")
 ```
 """
-    },
-    "debugging": {
-        "question": "이 코드가 왜 안 되는지 모르겠어요: for i in range(10) print(i)",
-        "answer": "..."
-    },
-    "function": {
-        "question": "함수가 뭐에요?",
-        "answer": "..."
     }
 }
 
@@ -104,26 +96,7 @@ def show_login():
                     st.session_state.logged_in = True
                     st.experimental_rerun()
 
-def show_main_app():
-    # Sidebar
-    with st.sidebar:
-        st.title("👦 CodeMate")
-        st.write(f"**안녕, {SAMPLE_USER['name']}!**")
-        st.write(f"**나이:** {SAMPLE_USER['age']}세")
-        st.write(f"**학년:** {SAMPLE_USER['grade']}학년")
-        st.write("**관심사:**")
-        for interest in SAMPLE_USER['interests']:
-            st.write(f"- {interest}")
-        
-        if st.button("로그아웃"):
-            st.session_state.logged_in = False
-            st.experimental_rerun()
-    
-    # Main content
-    st.title("CodeMate와 함께 코딩을 배워보세요! 👨‍💻")
-    tabs = st.tabs(["질문하기", "코드 연습", "학습 분석", "선생님 연결하기"])
-    # Tab 2: Code practice
-with tabs[1]:
+def show_code_practice():
     st.header("코드 연습")
     
     # 개인화된 추천 섹션
@@ -139,7 +112,7 @@ with tabs[1]:
     with col2:
         st.metric("다음 목표까지", "2문제")
     with col3:
-        st.metric("획득한 마인크래프트 배지", "🏆 2개")
+        st.metric("획득한 마인크래프트 배지", "�� 2개")
     
     # 난이도 선택
     difficulty = st.selectbox(
@@ -233,6 +206,234 @@ place_block()""",
                 
             except Exception as e:
                 st.error(f"코드 실행 중 오류가 발생했습니다: {str(e)}")
+
+def show_main_app():
+    # Sidebar
+    with st.sidebar:
+        st.title("👦 CodeMate")
+        st.write(f"**안녕, {SAMPLE_USER['name']}!**")
+        st.write(f"**나이:** {SAMPLE_USER['age']}세")
+        st.write(f"**학년:** {SAMPLE_USER['grade']}학년")
+        st.write("**관심사:**")
+        for interest in SAMPLE_USER['interests']:
+            st.write(f"- {interest}")
+        
+        if st.button("로그아웃"):
+            st.session_state.logged_in = False
+            st.experimental_rerun()
+    
+    # Main content
+    st.title("CodeMate와 함께 코딩을 배워보세요! 👨‍💻")
+    tabs = st.tabs(["질문하기", "코드 연습", "학습 분석", "선생님 연결하기"])
+    
+    # Tab 1: Ask questions
+    with tabs[0]:
+        st.header("무엇이든 물어보세요!")
+        # 질문하기 탭 내용...
+    
+    # Tab 2: Code practice
+    with tabs[1]:
+        show_code_practice()
+    
+    # Tab 3: Learning analysis
+    with tabs[2]:
+        st.header("학습 분석")
+        # 학습 분석 탭 내용...
+    
+    # Tab 4: Teacher connection
+    with tabs[3]:
+        st.header("선생님 연결하기")
+        # 선생님 연결하기 탭 내용...
+
+# Main logic
+if st.session_state.logged_in:
+    show_main_app()
+else:
+    show_login()
+
+# Footer
+st.divider()
+st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터")
+# Login page
+def show_login():
+    with st.container():
+        st.markdown("""
+        <style>
+        .login-header {
+            text-align: center;
+            padding: 1rem 0;
+            color: #4B7BEC;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        st.markdown('<div class="login-container">', unsafe_allow_html=True)
+        st.markdown('<h1 class="login-header">👦 CodeMate - AI 코딩 튜터</h1>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            st.markdown('<h3 class="centered-text">개인 맞춤형 학습 경험</h3>', unsafe_allow_html=True)
+        
+        with col2:
+            st.subheader("계정 로그인")
+            user_id = st.text_input("사용자 ID:", value="user123")
+            password = st.text_input("비밀번호:", value="demo1234", type="password")
+            
+            if st.button("로그인"):
+                with st.spinner("로그인 중..."):
+                    time.sleep(1)
+                    st.session_state.logged_in = True
+                    st.experimental_rerun()
+
+def show_code_practice():
+    st.header("코드 연습")
+    
+    # 개인화된 추천 섹션
+    st.markdown("""
+    ### 🎮 마인크래프트 코딩 여정
+    안녕하세요, {}님! 마인크래프트를 좋아하시는 당신을 위한 특별한 코딩 연습을 준비했어요.
+    """.format(SAMPLE_USER['name']))
+    
+    # 학습 진행도 표시
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("완료한 마인크래프트 문제", "3개")
+    with col2:
+        st.metric("다음 목표까지", "2문제")
+    with col3:
+        st.metric("획득한 마인크래프트 배지", "�� 2개")
+    
+    # 난이도 선택
+    difficulty = st.selectbox(
+        "난이도 선택",
+        ["초급", "중급", "고급"]
+    )
+    
+    # 주제 선택
+    topic = st.selectbox(
+        "주제 선택",
+        ["마인크래프트 기초", "변수와 연산자", "조건문", "반복문", "함수"]
+    )
+    
+    # 문제 목록
+    practice_problems = {
+        "초급": {
+            "마인크래프트 기초": {
+                "title": "마인크래프트 블록 놓기",
+                "description": "마인크래프트에서 블록을 놓는 간단한 프로그램을 작성하세요.",
+                "template": """def place_block():
+    # 여기에 코드를 작성하세요
+    block_type = input("어떤 블록을 놓을까요? (돌, 나무, 흙): ")
+    count = int(input("몇 개를 놓을까요? "))
+    
+    # 블록을 놓는 코드를 작성하세요
+    for i in range(count):
+        print(f"{i+1}번째 {block_type} 블록을 놓았습니다!")
+    print(f"총 {count}개의 {block_type} 블록을 놓았습니다!")
+
+# 함수 실행
+place_block()""",
+                "hint": "for 반복문을 사용해서 블록을 여러 개 놓아보세요!",
+                "next_steps": "다음으로는 자동으로 건물을 짓는 방법을 배워볼까요?"
+            }
+        }
+    }
+    
+    # 선택된 문제 표시
+    if difficulty in practice_problems and topic in practice_problems[difficulty]:
+        problem = practice_problems[difficulty][topic]
+        st.subheader(f"📝 {problem['title']}")
+        st.info(problem['description'])
+        
+        with st.expander("💡 힌트 보기"):
+            st.write(problem['hint'])
+        
+        # 코드 작성 영역
+        user_code = st.text_area(
+            "코드를 여기에 작성하세요:",
+            value=problem['template'],
+            height=250
+        )
+        
+        # 실행 버튼
+        if st.button("실행하기"):
+            st.subheader("실행 결과:")
+            try:
+                # 표준 입출력 리다이렉션
+                import sys
+                from io import StringIO
+                import contextlib
+
+                # 사용자 입력 처리
+                input_buffer = []
+                def mock_input(prompt=""):
+                    if not input_buffer:
+                        user_input = st.text_input(prompt, key=f"input_{len(input_buffer)}")
+                        if user_input:
+                            input_buffer.append(user_input)
+                            return user_input
+                        return ""
+                    return input_buffer.pop(0)
+
+                # 코드 실행
+                output = StringIO()
+                with contextlib.redirect_stdout(output):
+                    sys.modules['builtins'].input = mock_input
+                    exec(user_code)
+                    sys.modules['builtins'].input = input
+
+                # 결과 표시
+                result = output.getvalue()
+                if result:
+                    st.code(result, language="plaintext")
+                
+                st.success("코드가 성공적으로 실행되었습니다!")
+                
+                # 피드백 및 다음 단계
+                st.info("### 피드백\n- 코드 구조가 잘 작성되었습니다.\n- 변수명이 명확합니다.")
+                st.markdown(f"### 다음 단계\n{problem['next_steps']}")
+                
+            except Exception as e:
+                st.error(f"코드 실행 중 오류가 발생했습니다: {str(e)}")
+
+def show_main_app():
+    # Sidebar
+    with st.sidebar:
+        st.title("👦 CodeMate")
+        st.write(f"**안녕, {SAMPLE_USER['name']}!**")
+        st.write(f"**나이:** {SAMPLE_USER['age']}세")
+        st.write(f"**학년:** {SAMPLE_USER['grade']}학년")
+        st.write("**관심사:**")
+        for interest in SAMPLE_USER['interests']:
+            st.write(f"- {interest}")
+        
+        if st.button("로그아웃"):
+            st.session_state.logged_in = False
+            st.experimental_rerun()
+    
+    # Main content
+    st.title("CodeMate와 함께 코딩을 배워보세요! 👨‍💻")
+    tabs = st.tabs(["질문하기", "코드 연습", "학습 분석", "선생님 연결하기"])
+    
+    # Tab 1: Ask questions
+    with tabs[0]:
+        st.header("무엇이든 물어보세요!")
+        # 질문하기 탭 내용...
+    
+    # Tab 2: Code practice
+    with tabs[1]:
+        show_code_practice()
+    
+    # Tab 3: Learning analysis
+    with tabs[2]:
+        st.header("학습 분석")
+        # 학습 분석 탭 내용...
+    
+    # Tab 4: Teacher connection
+    with tabs[3]:
+        st.header("선생님 연결하기")
+        # 선생님 연결하기 탭 내용...
 
 # Main logic
 if st.session_state.logged_in:
