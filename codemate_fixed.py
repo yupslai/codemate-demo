@@ -433,8 +433,13 @@ def show_main_app():
     count = int(input("몇 개를 놓을까요? "))
     
     # 블록을 놓는 코드를 작성하세요
-    pass""",
-                        "hint": "마인크래프트에서 블록을 놓을 때는 place_block() 함수를 사용해요!",
+    for i in range(count):
+        print(f"{i+1}번째 {block_type} 블록을 놓았습니다!")
+    print(f"총 {count}개의 {block_type} 블록을 놓았습니다!")
+
+# 함수 실행
+place_block()""",
+                        "hint": "for 반복문을 사용해서 블록을 여러 개 놓아보세요!",
                         "next_steps": "다음으로는 자동으로 건물을 짓는 방법을 배워볼까요?"
                     },
                     "변수와 연산자": {
@@ -448,9 +453,29 @@ def show_main_app():
         "나무": 20
     }
     
-    # 인벤토리 관리 기능을 구현하세요
-    pass""",
-                        "hint": "인벤토리의 아이템 개수를 더하거나 빼는 방법을 생각해보세요!",
+    # 인벤토리 출력
+    print("현재 인벤토리:")
+    for item, count in inventory.items():
+        print(f"{item}: {count}개")
+    
+    # 아이템 추가
+    item = input("어떤 아이템을 추가할까요? (다이아몬드, 철, 나무): ")
+    amount = int(input("몇 개를 추가할까요? "))
+    
+    if item in inventory:
+        inventory[item] += amount
+        print(f"{item} {amount}개를 추가했습니다!")
+    else:
+        print("그런 아이템은 없습니다!")
+    
+    # 최종 인벤토리 출력
+    print("\\n최종 인벤토리:")
+    for item, count in inventory.items():
+        print(f"{item}: {count}개")
+
+# 함수 실행
+manage_inventory()""",
+                        "hint": "딕셔너리의 값을 수정하는 방법을 사용해보세요!",
                         "next_steps": "이제 이 인벤토리를 이용해서 자동으로 아이템을 사용하는 방법을 배워볼까요?"
                     }
                 },
@@ -460,8 +485,27 @@ def show_main_app():
                         "description": "마인크래프트에서 자동으로 건물을 짓는 함수를 만들어보세요.",
                         "template": """def build_house(x, y, z, size):
     # 이 함수는 주어진 위치에 size 크기의 집을 지어야 합니다
-    # 아래 코드를 완성하세요
-    pass""",
+    print(f"위치 ({x}, {y}, {z})에 {size} 크기의 집을 짓기 시작합니다!")
+    
+    # 기초 공사
+    print("1. 기초 공사 중...")
+    for i in range(size):
+        print(f"   - 기초 블록 {i+1}/{size} 설치")
+    
+    # 벽 건설
+    print("2. 벽 건설 중...")
+    for i in range(size):
+        print(f"   - 벽 블록 {i+1}/{size} 설치")
+    
+    # 지붕 설치
+    print("3. 지붕 설치 중...")
+    for i in range(size):
+        print(f"   - 지붕 블록 {i+1}/{size} 설치")
+    
+    print(f"집이 완성되었습니다! 위치: ({x}, {y}, {z}), 크기: {size}")
+
+# 함수 실행
+build_house(10, 0, 15, 5)""",
                         "hint": "집을 지을 때는 기초 → 벽 → 지붕 순서로 만들어보세요!",
                         "next_steps": "다음으로는 더 복잡한 건물을 자동으로 짓는 방법을 배워볼까요?"
                     },
@@ -475,8 +519,29 @@ def show_main_app():
         "텔레포트 링": {"사용 횟수": 3, "쿨다운": 60}
     }
     
-    # 모드 아이템 관리 기능을 구현하세요
-    pass""",
+    # 아이템 목록 출력
+    print("사용 가능한 아이템:")
+    for item, stats in mod_items.items():
+        print(f"\\n{item}:")
+        for stat, value in stats.items():
+            print(f"  - {stat}: {value}")
+    
+    # 아이템 사용
+    item = input("\\n어떤 아이템을 사용할까요? (마법 지팡이, 텔레포트 링): ")
+    
+    if item in mod_items:
+        print(f"\\n{item} 사용 중...")
+        if item == "마법 지팡이":
+            mod_items[item]["내구도"] -= 10
+            print(f"마법 지팡이의 남은 내구도: {mod_items[item]['내구도']}")
+        elif item == "텔레포트 링":
+            mod_items[item]["사용 횟수"] -= 1
+            print(f"텔레포트 링의 남은 사용 횟수: {mod_items[item]['사용 횟수']}")
+    else:
+        print("그런 아이템은 없습니다!")
+
+# 함수 실행
+manage_mod_items()""",
                         "hint": "아이템의 속성을 딕셔너리로 관리하면 편리해요!",
                         "next_steps": "이제 이 아이템들을 사용하는 새로운 몬스터를 만들어볼까요?"
                     }
@@ -487,16 +552,27 @@ def show_main_app():
                         "description": "마인크래프트 모드의 새로운 몬스터 클래스를 구현하세요.",
                         "template": """class MinecraftMonster:
     def __init__(self, name, health, attack_power):
-        # 여기에 코드를 작성하세요
-        pass
+        self.name = name
+        self.health = health
+        self.attack_power = attack_power
+        print(f"{name}이(가) 생성되었습니다! 체력: {health}, 공격력: {attack_power}")
     
     def attack(self, target):
-        # 공격 메서드를 구현하세요
-        pass
+        print(f"{self.name}이(가) {target}을(를) 공격합니다!")
+        print(f"공격력 {self.attack_power}의 데미지를 입혔습니다!")
     
     def take_damage(self, amount):
-        # 데미지를 받는 메서드를 구현하세요
-        pass""",
+        self.health -= amount
+        print(f"{self.name}이(가) {amount}의 데미지를 입었습니다!")
+        print(f"남은 체력: {self.health}")
+        if self.health <= 0:
+            print(f"{self.name}이(가) 쓰러졌습니다!")
+
+# 몬스터 생성 및 테스트
+zombie = MinecraftMonster("좀비", 20, 5)
+zombie.attack("플레이어")
+zombie.take_damage(10)
+zombie.take_damage(15)""",
                         "hint": "몬스터의 상태를 클래스 변수로 관리하면 좋아요!",
                         "next_steps": "이제 이 몬스터들을 서버에서 관리하는 방법을 배워볼까요?"
                     },
@@ -505,15 +581,34 @@ def show_main_app():
                         "description": "마인크래프트 서버의 플레이어 데이터를 관리하는 프로그램을 작성하세요.",
                         "template": """def manage_server_data():
     # 여기에 코드를 작성하세요
+    players = {
+        "player1": {"level": 10, "items": ["다이아몬드 검", "철 갑옷"]},
+        "player2": {"level": 5, "items": ["나무 검", "가죽 갑옷"]}
+    }
+    
     try:
-        # 서버 데이터 처리 코드를 작성하세요
-        pass
-    except FileNotFoundError:
-        # 데이터 파일을 찾을 수 없을 때의 처리
-        pass
+        # 플레이어 데이터 출력
+        print("서버 플레이어 목록:")
+        for player, data in players.items():
+            print(f"\\n{player}:")
+            print(f"  레벨: {data['level']}")
+            print(f"  아이템: {', '.join(data['items'])}")
+        
+        # 플레이어 검색
+        search_player = input("\\n검색할 플레이어 이름을 입력하세요: ")
+        if search_player in players:
+            print(f"\\n{search_player}의 정보:")
+            print(f"레벨: {players[search_player]['level']}")
+            print(f"아이템: {', '.join(players[search_player]['items'])}")
+        else:
+            print(f"\\n{search_player} 플레이어를 찾을 수 없습니다!")
+            
     except Exception as e:
-        # 기타 예외 처리
-        pass""",
+        print(f"오류가 발생했습니다: {str(e)}")
+        print("서버 데이터를 다시 확인해주세요.")
+
+# 함수 실행
+manage_server_data()""",
                         "hint": "서버 데이터를 안전하게 저장하고 불러오는 방법을 생각해보세요!",
                         "next_steps": "축하합니다! 이제 마인크래프트 모드 개발의 기초를 모두 배웠어요!"
                     }
