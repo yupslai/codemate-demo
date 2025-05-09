@@ -202,7 +202,7 @@ def show_login():
         with col1:
             st.markdown('<div class="logo-container">', unsafe_allow_html=True)
             # 로고와 슬로건
-            st.markdown('<h1 style="font-size: 80px; text-align: center;">🤖</h1>', unsafe_allow_html=True)
+            st.markdown('<h1 style="font-size: 80px; text-align: center;">👦</h1>', unsafe_allow_html=True)
             st.markdown('<h3 class="centered-text">개인 맞춤형 학습 경험</h3>', unsafe_allow_html=True)
             st.markdown('<p class="centered-text">학생의 관심사와 학습 스타일에 맞춘<br>지능형 코딩 교육</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
@@ -366,6 +366,28 @@ def show_main_app():
         with tabs[1]:
             st.header("코드 연습")
             
+            # 개인화된 추천 섹션 추가
+            st.markdown("""
+            ### 🎮 마인크래프트 코딩 여정
+            안녕하세요, {}님! 마인크래프트를 좋아하시는 당신을 위한 특별한 코딩 연습을 준비했어요.
+            """.format(SAMPLE_USER['name']))
+            
+            # 학습 진행도 표시
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("완료한 마인크래프트 문제", "3개")
+            with col2:
+                st.metric("다음 목표까지", "2문제")
+            with col3:
+                st.metric("획득한 마인크래프트 배지", "🏆 2개")
+            
+            # 추천 문제 섹션
+            st.subheader("🎯 추천 문제")
+            st.info("""
+            마인크래프트를 좋아하시는 {}님을 위한 맞춤형 문제를 준비했어요!
+            지금까지 함수와 반복문을 배웠으니, 이번에는 마인크래프트에서 자동으로 건물을 짓는 프로그램을 만들어볼까요?
+            """.format(SAMPLE_USER['name']))
+            
             # 난이도 선택
             difficulty = st.selectbox(
                 "난이도 선택",
@@ -375,7 +397,7 @@ def show_main_app():
             # 주제 선택
             topic = st.selectbox(
                 "주제 선택",
-                ["변수와 연산자", "조건문", "반복문", "함수", "리스트와 딕셔너리", "클래스와 객체", "파일 입출력", "예외 처리"]
+                ["마인크래프트 기초", "변수와 연산자", "조건문", "반복문", "함수", "리스트와 딕셔너리", "클래스와 객체", "파일 입출력", "예외 처리"]
             )
             
             # 문제 유형 선택
@@ -384,83 +406,116 @@ def show_main_app():
                 ["코드 완성하기", "버그 수정하기", "알고리즘 구현하기", "코드 최적화하기", "코드 리팩토링하기"]
             )
             
+            # 학습 경로 표시
+            st.subheader("📈 나의 마인크래프트 코딩 여정")
+            learning_path = [
+                {"step": 1, "title": "기본 블록 놓기", "status": "완료", "icon": "✅"},
+                {"step": 2, "title": "자동 건축 기초", "status": "완료", "icon": "✅"},
+                {"step": 3, "title": "인벤토리 관리", "status": "진행 중", "icon": "🔄"},
+                {"step": 4, "title": "모드 개발 기초", "status": "예정", "icon": "⏳"},
+                {"step": 5, "title": "서버 관리", "status": "예정", "icon": "⏳"}
+            ]
+            
+            for step in learning_path:
+                st.markdown(f"""
+                {step['icon']} **Step {step['step']}**: {step['title']} - {step['status']}
+                """)
+            
             # 문제 목록 (예시)
             practice_problems = {
                 "초급": {
-                    "변수와 연산자": {
-                        "title": "간단한 계산기 만들기",
-                        "description": "두 개의 숫자를 입력받아 사칙연산을 수행하는 프로그램을 작성하세요.",
-                        "template": """def calculator():
+                    "마인크래프트 기초": {
+                        "title": "마인크래프트 블록 놓기",
+                        "description": "마인크래프트에서 블록을 놓는 간단한 프로그램을 작성하세요.",
+                        "template": """def place_block():
     # 여기에 코드를 작성하세요
-    num1 = float(input("첫 번째 숫자를 입력하세요: "))
-    num2 = float(input("두 번째 숫자를 입력하세요: "))
-    operation = input("연산자를 입력하세요 (+, -, *, /): ")
+    block_type = input("어떤 블록을 놓을까요? (돌, 나무, 흙): ")
+    count = int(input("몇 개를 놓을까요? "))
     
-    # 계산 결과를 출력하세요
-    pass"""
+    # 블록을 놓는 코드를 작성하세요
+    pass""",
+                        "hint": "마인크래프트에서 블록을 놓을 때는 place_block() 함수를 사용해요!",
+                        "next_steps": "다음으로는 자동으로 건물을 짓는 방법을 배워볼까요?"
                     },
-                    "조건문": {
-                        "title": "성적 등급 판별기",
-                        "description": "점수를 입력받아 등급을 판별하는 프로그램을 작성하세요.",
-                        "template": """def grade_calculator():
+                    "변수와 연산자": {
+                        "title": "마인크래프트 인벤토리 관리",
+                        "description": "마인크래프트 인벤토리의 아이템 개수를 관리하는 프로그램을 작성하세요.",
+                        "template": """def manage_inventory():
     # 여기에 코드를 작성하세요
-    score = float(input("점수를 입력하세요: "))
+    inventory = {
+        "다이아몬드": 5,
+        "철": 10,
+        "나무": 20
+    }
     
-    # 등급을 판별하고 출력하세요
-    pass"""
+    # 인벤토리 관리 기능을 구현하세요
+    pass""",
+                        "hint": "인벤토리의 아이템 개수를 더하거나 빼는 방법을 생각해보세요!",
+                        "next_steps": "이제 이 인벤토리를 이용해서 자동으로 아이템을 사용하는 방법을 배워볼까요?"
                     }
                 },
                 "중급": {
                     "함수": {
-                        "title": "마인크래프트 블록 놓기 함수",
-                        "description": "마인크래프트에서 여러 종류의 블록을 놓는 함수를 만들어보세요.",
-                        "template": """def place_blocks(block_type, count):
-    # 이 함수는 주어진 유형의 블록을 count만큼 놓아야 합니다
+                        "title": "마인크래프트 자동 건축",
+                        "description": "마인크래프트에서 자동으로 건물을 짓는 함수를 만들어보세요.",
+                        "template": """def build_house(x, y, z, size):
+    # 이 함수는 주어진 위치에 size 크기의 집을 지어야 합니다
     # 아래 코드를 완성하세요
-    pass"""
+    pass""",
+                        "hint": "집을 지을 때는 기초 → 벽 → 지붕 순서로 만들어보세요!",
+                        "next_steps": "다음으로는 더 복잡한 건물을 자동으로 짓는 방법을 배워볼까요?"
                     },
                     "리스트와 딕셔너리": {
-                        "title": "학생 성적 관리 시스템",
-                        "description": "학생들의 성적을 관리하는 프로그램을 작성하세요.",
-                        "template": """def student_grade_manager():
+                        "title": "마인크래프트 모드 아이템 관리",
+                        "description": "마인크래프트 모드의 새로운 아이템을 관리하는 프로그램을 작성하세요.",
+                        "template": """def manage_mod_items():
     # 여기에 코드를 작성하세요
-    students = {}
+    mod_items = {
+        "마법 지팡이": {"공격력": 10, "내구도": 100},
+        "텔레포트 링": {"사용 횟수": 3, "쿨다운": 60}
+    }
     
-    # 학생 정보 입력 및 성적 관리 기능을 구현하세요
-    pass"""
+    # 모드 아이템 관리 기능을 구현하세요
+    pass""",
+                        "hint": "아이템의 속성을 딕셔너리로 관리하면 편리해요!",
+                        "next_steps": "이제 이 아이템들을 사용하는 새로운 몬스터를 만들어볼까요?"
                     }
                 },
                 "고급": {
                     "클래스와 객체": {
-                        "title": "은행 계좌 관리 시스템",
-                        "description": "은행 계좌를 관리하는 클래스를 구현하세요.",
-                        "template": """class BankAccount:
-    def __init__(self):
+                        "title": "마인크래프트 모드 개발",
+                        "description": "마인크래프트 모드의 새로운 몬스터 클래스를 구현하세요.",
+                        "template": """class MinecraftMonster:
+    def __init__(self, name, health, attack_power):
         # 여기에 코드를 작성하세요
         pass
     
-    def deposit(self, amount):
-        # 입금 메서드를 구현하세요
+    def attack(self, target):
+        # 공격 메서드를 구현하세요
         pass
     
-    def withdraw(self, amount):
-        # 출금 메서드를 구현하세요
-        pass"""
+    def take_damage(self, amount):
+        # 데미지를 받는 메서드를 구현하세요
+        pass""",
+                        "hint": "몬스터의 상태를 클래스 변수로 관리하면 좋아요!",
+                        "next_steps": "이제 이 몬스터들을 서버에서 관리하는 방법을 배워볼까요?"
                     },
                     "예외 처리": {
-                        "title": "파일 처리 프로그램",
-                        "description": "파일을 읽고 쓰는 프로그램을 예외 처리와 함께 구현하세요.",
-                        "template": """def file_handler():
+                        "title": "마인크래프트 서버 관리",
+                        "description": "마인크래프트 서버의 플레이어 데이터를 관리하는 프로그램을 작성하세요.",
+                        "template": """def manage_server_data():
     # 여기에 코드를 작성하세요
     try:
-        # 파일 처리 코드를 작성하세요
+        # 서버 데이터 처리 코드를 작성하세요
         pass
     except FileNotFoundError:
-        # 파일을 찾을 수 없을 때의 처리
+        # 데이터 파일을 찾을 수 없을 때의 처리
         pass
     except Exception as e:
         # 기타 예외 처리
-        pass"""
+        pass""",
+                        "hint": "서버 데이터를 안전하게 저장하고 불러오는 방법을 생각해보세요!",
+                        "next_steps": "축하합니다! 이제 마인크래프트 모드 개발의 기초를 모두 배웠어요!"
                     }
                 }
             }
@@ -470,6 +525,10 @@ def show_main_app():
                 problem = practice_problems[difficulty][topic]
                 st.subheader(f"📝 {problem['title']}")
                 st.info(problem['description'])
+                
+                # 힌트 표시 (접을 수 있는 섹션)
+                with st.expander("💡 힌트 보기"):
+                    st.write(problem['hint'])
                 
                 # 코드 작성 영역
                 user_code = st.text_area(
@@ -499,7 +558,6 @@ def show_main_app():
                             st.error(result.stderr)
                             
                         # 임시 파일 삭제
-                        import os
                         os.remove("temp_code.py")
                         
                         st.success("코드가 성공적으로 실행되었습니다!")
@@ -513,8 +571,9 @@ def show_main_app():
                         """)
                         
                         # 다음 단계 제안
-                        st.markdown("""
+                        st.markdown(f"""
                         ### 다음 단계
+                        {problem['next_steps']}
                         - 코드를 더 효율적으로 개선해보세요.
                         - 다른 입력값으로 테스트해보세요.
                         - 예외 처리를 추가해보세요.
@@ -718,4 +777,4 @@ else:
 
 # Footer
 st.divider()
-st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터") 
+st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터")
