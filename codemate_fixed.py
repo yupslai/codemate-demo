@@ -4,8 +4,6 @@ import json
 import random
 import time
 from datetime import datetime
-import pandas as pd
-import plotly.express as px
 
 # 로고 URL 설정 (로컬 파일 대신 URL 사용)
 LOGO_URL = "https://raw.githubusercontent.com/openai/openai-python/main/assets/logo.png"
@@ -109,6 +107,36 @@ build_house(30, 0, 25, "큰")
 
 함수에 대해 더 궁금한 점이 있니?
         """
+    },
+    "variable": {
+        "question": "변수가 뭐에요?",
+        "answer": """
+안녕 민호! 변수는 데이터를 저장하는 상자라고 생각하면 돼. 마인크래프트에서 인벤토리처럼!
+
+예를 들어볼게:
+
+```python
+# 마인크래프트에서 블록 개수를 세는 변수
+블록_개수 = 0
+
+# 블록을 놓을 때마다 개수가 증가
+블록_개수 = 블록_개수 + 1
+print(f"지금까지 {블록_개수}개의 블록을 놓았어요!")
+
+# 다이아몬드 개수를 저장하는 변수
+다이아몬드 = 5
+print(f"내 인벤토리에 다이아몬드가 {다이아몬드}개 있어요!")
+```
+
+변수를 사용하면:
+1. 데이터를 저장할 수 있어 (블록 개수, 다이아몬드 개수 등)
+2. 나중에 그 데이터를 다시 사용할 수 있어
+3. 데이터가 바뀔 때마다 자동으로 업데이트돼
+
+마치 마인크래프트에서 인벤토리에 아이템을 넣어두고 나중에 사용하는 것과 비슷하지!
+
+변수에 대해 더 궁금한 점이 있니?
+        """
     }
 }
 
@@ -174,7 +202,7 @@ def show_login():
         with col1:
             st.markdown('<div class="logo-container">', unsafe_allow_html=True)
             # 로고와 슬로건
-            st.markdown('<h1 style="font-size: 80px; text-align: center;">👦</h1>', unsafe_allow_html=True)
+            st.markdown('<h1 style="font-size: 80px; text-align: center;">🤖</h1>', unsafe_allow_html=True)
             st.markdown('<h3 class="centered-text">개인 맞춤형 학습 경험</h3>', unsafe_allow_html=True)
             st.markdown('<p class="centered-text">학생의 관심사와 학습 스타일에 맞춘<br>지능형 코딩 교육</p>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
@@ -318,7 +346,7 @@ def show_main_app():
                     st.markdown(f"""
                     <div style='background-color: #f0f2f6; padding: 10px; border-radius: 10px; margin: 10px 0;'>
                         <div style='display: flex; align-items: center;'>
-                            <span style='font-size: 24px; margin-right: 10px;'>👦</span>
+                            <span style='font-size: 24px; margin-right: 10px;'>🤖</span>
                             <div>{chat['question']}</div>
                         </div>
                     </div>
@@ -338,57 +366,164 @@ def show_main_app():
         with tabs[1]:
             st.header("코드 연습")
             
-            # Sample practice problem based on user's weak concept (functions)
-            st.subheader("추천 연습 문제")
-            st.info("함수에 대한 이해도를 높이기 위한 연습 문제입니다.")
+            # 난이도 선택
+            difficulty = st.selectbox(
+                "난이도 선택",
+                ["초급", "중급", "고급"]
+            )
             
-            st.markdown("""
-            ### 마인크래프트 블록 놓기 함수 만들기
+            # 주제 선택
+            topic = st.selectbox(
+                "주제 선택",
+                ["변수와 연산자", "조건문", "반복문", "함수", "리스트와 딕셔너리", "클래스와 객체", "파일 입출력", "예외 처리"]
+            )
             
-            마인크래프트에서 여러 종류의 블록을 놓는 함수를 만들어보세요:
+            # 문제 유형 선택
+            problem_type = st.selectbox(
+                "문제 유형",
+                ["코드 완성하기", "버그 수정하기", "알고리즘 구현하기", "코드 최적화하기", "코드 리팩토링하기"]
+            )
             
-            ```python
-            def place_blocks(block_type, count):
-                # 이 함수는 주어진 유형의 블록을 count만큼 놓아야 합니다
-                # 아래 코드를 완성하세요
-                pass
-            ```
-            
-            1. 함수가 블록 타입과 개수를 받도록 하세요
-            2. 블록을 놓을 때마다 메시지를 출력하세요
-            3. 모든 블록을 놓은 후 완료 메시지를 출력하세요
-            """)
-            
-            user_code = st.text_area("코드를 여기에 작성하세요:", height=250, value="""def place_blocks(block_type, count):
+            # 문제 목록 (예시)
+            practice_problems = {
+                "초급": {
+                    "변수와 연산자": {
+                        "title": "간단한 계산기 만들기",
+                        "description": "두 개의 숫자를 입력받아 사칙연산을 수행하는 프로그램을 작성하세요.",
+                        "template": """def calculator():
     # 여기에 코드를 작성하세요
-    for i in range(count):
-        print(f"{block_type} 블록을 놓았습니다.")
-        
-    print(f"총 {count}개의 {block_type} 블록을 놓았습니다. 완료!")
+    num1 = float(input("첫 번째 숫자를 입력하세요: "))
+    num2 = float(input("두 번째 숫자를 입력하세요: "))
+    operation = input("연산자를 입력하세요 (+, -, *, /): ")
     
-# 함수 테스트
-place_blocks("돌", 5)
-""")
+    # 계산 결과를 출력하세요
+    pass"""
+                    },
+                    "조건문": {
+                        "title": "성적 등급 판별기",
+                        "description": "점수를 입력받아 등급을 판별하는 프로그램을 작성하세요.",
+                        "template": """def grade_calculator():
+    # 여기에 코드를 작성하세요
+    score = float(input("점수를 입력하세요: "))
+    
+    # 등급을 판별하고 출력하세요
+    pass"""
+                    }
+                },
+                "중급": {
+                    "함수": {
+                        "title": "마인크래프트 블록 놓기 함수",
+                        "description": "마인크래프트에서 여러 종류의 블록을 놓는 함수를 만들어보세요.",
+                        "template": """def place_blocks(block_type, count):
+    # 이 함수는 주어진 유형의 블록을 count만큼 놓아야 합니다
+    # 아래 코드를 완성하세요
+    pass"""
+                    },
+                    "리스트와 딕셔너리": {
+                        "title": "학생 성적 관리 시스템",
+                        "description": "학생들의 성적을 관리하는 프로그램을 작성하세요.",
+                        "template": """def student_grade_manager():
+    # 여기에 코드를 작성하세요
+    students = {}
+    
+    # 학생 정보 입력 및 성적 관리 기능을 구현하세요
+    pass"""
+                    }
+                },
+                "고급": {
+                    "클래스와 객체": {
+                        "title": "은행 계좌 관리 시스템",
+                        "description": "은행 계좌를 관리하는 클래스를 구현하세요.",
+                        "template": """class BankAccount:
+    def __init__(self):
+        # 여기에 코드를 작성하세요
+        pass
+    
+    def deposit(self, amount):
+        # 입금 메서드를 구현하세요
+        pass
+    
+    def withdraw(self, amount):
+        # 출금 메서드를 구현하세요
+        pass"""
+                    },
+                    "예외 처리": {
+                        "title": "파일 처리 프로그램",
+                        "description": "파일을 읽고 쓰는 프로그램을 예외 처리와 함께 구현하세요.",
+                        "template": """def file_handler():
+    # 여기에 코드를 작성하세요
+    try:
+        # 파일 처리 코드를 작성하세요
+        pass
+    except FileNotFoundError:
+        # 파일을 찾을 수 없을 때의 처리
+        pass
+    except Exception as e:
+        # 기타 예외 처리
+        pass"""
+                    }
+                }
+            }
             
-            if st.button("실행하기"):
-                st.subheader("실행 결과:")
+            # 선택된 문제 표시
+            if difficulty in practice_problems and topic in practice_problems[difficulty]:
+                problem = practice_problems[difficulty][topic]
+                st.subheader(f"📝 {problem['title']}")
+                st.info(problem['description'])
                 
-                # Simulate code execution
-                output = st.code("""돌 블록을 놓았습니다.
-돌 블록을 놓았습니다.
-돌 블록을 놓았습니다.
-돌 블록을 놓았습니다.
-돌 블록을 놓았습니다.
-총 5개의 돌 블록을 놓았습니다. 완료!""", language="plaintext")
+                # 코드 작성 영역
+                user_code = st.text_area(
+                    "코드를 여기에 작성하세요:",
+                    value=problem['template'],
+                    height=250
+                )
                 
-                # Show feedback
-                st.success("잘했어요! 함수를 올바르게 만들었습니다. 이제 다른 블록 타입과 개수로도 시도해보세요.")
-                
-                # Update learning progress
-                for concept in LEARNING_HISTORY['concepts']:
-                    if concept['id'] == 'fun001':  # Function concept ID
-                        concept['understanding_level'] = min(5, concept['understanding_level'] + 1)
-                        concept['last_practiced'] = datetime.now().strftime("%Y-%m-%d")
+                # 실행 버튼
+                if st.button("실행하기"):
+                    st.subheader("실행 결과:")
+                    try:
+                        # 코드 실행을 위한 임시 파일 생성
+                        with open("temp_code.py", "w", encoding="utf-8") as f:
+                            f.write(user_code)
+                        
+                        # 코드 실행 및 결과 캡처
+                        import subprocess
+                        result = subprocess.run(["python", "temp_code.py"], 
+                                             capture_output=True, 
+                                             text=True)
+                        
+                        # 실행 결과 표시
+                        if result.stdout:
+                            st.code(result.stdout, language="plaintext")
+                        if result.stderr:
+                            st.error(result.stderr)
+                            
+                        # 임시 파일 삭제
+                        import os
+                        os.remove("temp_code.py")
+                        
+                        st.success("코드가 성공적으로 실행되었습니다!")
+                        
+                        # 피드백 제공
+                        st.info("""
+                        ### 피드백
+                        - 코드 구조가 잘 작성되었습니다.
+                        - 변수명이 명확합니다.
+                        - 주석이 적절히 사용되었습니다.
+                        """)
+                        
+                        # 다음 단계 제안
+                        st.markdown("""
+                        ### 다음 단계
+                        - 코드를 더 효율적으로 개선해보세요.
+                        - 다른 입력값으로 테스트해보세요.
+                        - 예외 처리를 추가해보세요.
+                        """)
+                        
+                    except Exception as e:
+                        st.error(f"코드 실행 중 오류가 발생했습니다: {str(e)}")
+            else:
+                st.info("선택한 난이도와 주제에 맞는 문제가 준비 중입니다.")
         
         # Tab 3: Learning analysis
         with tabs[2]:
@@ -405,8 +540,10 @@ place_blocks("돌", 5)
             
             # Timeline visualization
             st.markdown("### 📈 학습 진행도 그래프")
+            import plotly.express as px
             
             # Convert timeline data to DataFrame format
+            import pandas as pd
             df = pd.DataFrame(timeline_data)
             df['score'] = df['score'].str.rstrip('%').astype('float')
             
@@ -581,4 +718,4 @@ else:
 
 # Footer
 st.divider()
-st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터")
+st.caption("© 2025 CodeMate - 개인화된 AI 코딩 튜터") 
